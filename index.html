@@ -2,40 +2,48 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>בוחן אינטראקטיבי: CNN ולמידת מכונה</title>
+
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
+
   <style>
-    body { font-family: 'Assistant', 'Inter', sans-serif; }
-    .option-button.correct {
-      background-color: #22c55e; color: white; border-color: #16a34a;
-    }
-    .option-button.incorrect {
-      background-color: #ef4444; color: white; border-color: #dc2626;
-    }
-    .option-button:disabled { opacity: 0.7; cursor: not-allowed; }
-    textarea:focus, button:focus {
-      outline: 2px solid #3b82f6;
-      outline-offset: 2px;
-    }
+    body{font-family:'Assistant','Inter',sans-serif}
+    .option-button.correct{background-color:#22c55e;color:#fff;border-color:#16a34a}
+    .option-button.incorrect{background-color:#ef4444;color:#fff;border-color:#dc2626}
+    .option-button:disabled{opacity:.7;cursor:not-allowed}
+    textarea:focus,button:focus{outline:2px solid #3b82f6;outline-offset:2px}
   </style>
 </head>
 <body class="bg-slate-100 flex items-center justify-center min-h-screen p-2 sm:p-4">
+
+  <!-- QUIZ CONTAINER -->
   <div id="quiz-container" class="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-2xl">
+    
+    <!-- Progress -->
     <div id="progress-score-container" class="mb-4 text-sm text-slate-600 flex justify-between">
       <span id="progress-text" class="font-medium"></span>
       <span id="score-text" class="font-medium"></span>
     </div>
 
+    <!-- Question -->
     <div id="question-area" class="mb-5">
       <h2 id="question-text" class="text-xl md:text-2xl font-semibold text-slate-800 mb-5 min-h-[60px]"></h2>
+
+      <!-- Multiple-choice options -->
       <div id="options-container" class="space-y-3"></div>
+
+      <!-- Open-ended input -->
       <div id="open-ended-container" class="hidden">
-        <textarea id="open-answer-input" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="4" placeholder="הקלד/י את תשובתך כאן..."></textarea>
+        <textarea id="open-answer-input" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="4" placeholder="הקלד/י את תשובתך כאן…"></textarea>
       </div>
     </div>
 
+    <!-- Feedback -->
     <div id="feedback-area" class="mb-5 p-4 bg-slate-50 rounded-lg min-h-[80px]">
       <p id="feedback-message" class="text-md font-semibold"></p>
       <div id="open-ended-correct-answer-container" class="hidden mt-2">
@@ -45,15 +53,19 @@
       <p id="explanation-text" class="mt-2 text-sm text-slate-700"></p>
     </div>
 
+    <!-- Controls -->
     <div id="controls-area" class="flex flex-col sm:flex-row justify-center items-center gap-3">
       <button id="submit-open-answer-button" class="hidden w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-150 ease-in-out">הצג תשובה</button>
+
       <div id="open-ended-self-grade-buttons" class="hidden flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
         <button id="self-grade-correct-button" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-5 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-150 ease-in-out">עניתי נכון</button>
         <button id="self-grade-incorrect-button" class="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-150 ease-in-out">עניתי לא נכון</button>
       </div>
+
       <button id="next-question-button" class="hidden w-full sm:w-auto bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-150 ease-in-out">השאלה הבאה</button>
     </div>
 
+    <!-- Results -->
     <div id="results-area" class="hidden text-center">
       <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">סיימת את הבוחן!</h2>
       <p id="final-score-text" class="text-xl text-slate-700 mb-6"></p>
@@ -61,202 +73,225 @@
     </div>
   </div>
 
+<!-- =====================  SCRIPT  ===================== -->
 <script>
+/* ---------- GLOBALS ---------- */
 let ALL_QUESTIONS = [];
 let shuffledQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 
+/* ---------- LOAD JSON ---------- */
 async function loadQuestions() {
   try {
-    const response = await fetch('questions1.json');
-    const data = await response.json();
+    const res   = await fetch('questions1.json');
+    const data  = await res.json();
     ALL_QUESTIONS = data;
-    shuffledQuestions = [...ALL_QUESTIONS];
-    shuffleArray(shuffledQuestions);
-    if (shuffledQuestions.length > 80) {
-      shuffledQuestions = shuffledQuestions.slice(0, 80);
-    }
     startQuiz();
-  } catch (e) {
-    alert("שגיאה בטעינת הקובץ questions1.json");
-    console.error(e);
+  } catch (err) {
+    alert('שגיאה בטעינת questions1.json');
+    console.error(err);
   }
 }
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
+/* ---------- UTILS ---------- */
+function shuffleArray(arr){
+  for(let i = arr.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
 
-function startQuiz() {
+/* ---------- QUIZ FLOW ---------- */
+function startQuiz(){
   shuffledQuestions = [...ALL_QUESTIONS];
   shuffleArray(shuffledQuestions);
-  if (shuffledQuestions.length > 80) {
-    shuffledQuestions = shuffledQuestions.slice(0, 80);
-  }
+  if (shuffledQuestions.length > 80) shuffledQuestions = shuffledQuestions.slice(0,80);
 
   currentQuestionIndex = 0;
   score = 0;
+
   resultsAreaEl.classList.add('hidden');
   questionAreaEl.classList.remove('hidden');
   feedbackAreaEl.classList.remove('hidden');
   controlsAreaEl.classList.remove('hidden');
+
   displayQuestion();
   updateProgressDisplay();
 }
 
-
-function updateProgressDisplay() {
-  progressTextEl.textContent = `שאלה ${currentQuestionIndex + 1} מתוך ${shuffledQuestions.length}`;
-  scoreTextEl.textContent = `ניקוד: ${score}`;
+function updateProgressDisplay(){
+  progressTextEl.textContent = `שאלה ${currentQuestionIndex+1} מתוך ${shuffledQuestions.length}`;
+  scoreTextEl.textContent    = `ניקוד: ${score}`;
 }
 
-function clearFeedback() {
+function clearFeedback(){
   feedbackMessageEl.textContent = '';
   explanationTextEl.textContent = '';
   openEndedCorrectAnswerContainerEl.classList.add('hidden');
   openEndedCorrectAnswerEl.textContent = '';
 }
 
-function displayQuestion() {
+/* ---------- DISPLAY QUESTION ---------- */
+function displayQuestion(){
   clearFeedback();
-  const currentQuestion = shuffledQuestions[currentQuestionIndex];
-  questionTextEl.textContent = currentQuestion.question;
-  optionsContainerEl.innerHTML = '';
-  openAnswerInputEl.value = '';
-  openAnswerInputEl.disabled = false;
 
-  if (currentQuestion.type === 'mc') {
-    const originalOptions = currentQuestion.options.map((text, index) => ({
-      text,
-      index
-    }));
-    shuffleArray(originalOptions);
-    
-    optionsContainerEl.innerHTML = '';
-    currentQuestion.shuffledOptions = originalOptions;
-    
-    originalOptions.forEach((optionObj, displayIndex) => {
-      const button = document.createElement('button');
-      button.textContent = optionObj.text;
-      button.classList.add('option-button', 'w-full', 'text-right', 'p-3', 'border', 'border-slate-300', 'rounded-lg', 'hover:bg-slate-100', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-400', 'transition', 'duration-150', 'ease-in-out');
-      button.onclick = () => selectAnswer(optionObj.index, button);
-      optionsContainerEl.appendChild(button);
+  const q = shuffledQuestions[currentQuestionIndex];
+  questionTextEl.textContent = q.question;
+
+  // reset areas
+  optionsContainerEl.innerHTML = '';
+  openAnswerInputEl.value      = '';
+  openAnswerInputEl.disabled   = false;
+
+  if (q.type === 'mc'){
+    /* multiple-choice */
+    optionsContainerEl.classList.remove('hidden');
+    openEndedContainerEl.classList.add('hidden');
+    submitOpenAnswerButtonEl.classList.add('hidden');
+    openEndedSelfGradeButtonsEl.classList.add('hidden');
+
+    // build option objects and shuffle
+    const opts = q.options.map((text,idx)=>({text,idx}));
+    shuffleArray(opts);
+
+    opts.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.textContent = opt.text;
+      btn.dataset.origIndex = opt.idx;           // save original index
+      btn.classList.add('option-button','w-full','text-right','p-3','border',
+                        'border-slate-300','rounded-lg','hover:bg-slate-100',
+                        'focus:outline-none','focus:ring-2','focus:ring-blue-400',
+                        'transition','duration-150','ease-in-out');
+
+      btn.onclick = ()=>selectAnswer(+btn.dataset.origIndex, btn);
+      optionsContainerEl.appendChild(btn);
     });
-  } else {
+
+  }else{
+    /* open-ended */
     optionsContainerEl.classList.add('hidden');
     openEndedContainerEl.classList.remove('hidden');
     submitOpenAnswerButtonEl.classList.remove('hidden');
     openEndedSelfGradeButtonsEl.classList.add('hidden');
   }
+
   nextQuestionButtonEl.classList.add('hidden');
   updateProgressDisplay();
 }
 
-function selectAnswer(selectedIndex, selectedButton) {
-  const currentQuestion = shuffledQuestions[currentQuestionIndex];
-  const isCorrect = selectedIndex === currentQuestion.correctAnswerIndex;
-  const optionButtons = optionsContainerEl.querySelectorAll('.option-button');
-  optionButtons.forEach(button => button.disabled = true);
+/* ---------- ANSWER HANDLERS ---------- */
+function selectAnswer(origIndex, clickedBtn){
+  const q  = shuffledQuestions[currentQuestionIndex];
+  const ok = origIndex === q.correctAnswerIndex;
 
-  if (isCorrect) {
+  // disable all
+  const allButtons = optionsContainerEl.querySelectorAll('.option-button');
+  allButtons.forEach(b=>b.disabled = true);
+
+  if (ok){
     score++;
-    selectedButton.classList.add('correct');
+    clickedBtn.classList.add('correct');
     feedbackMessageEl.textContent = 'נכון!';
-    feedbackMessageEl.className = 'text-md font-semibold text-green-600';
-  } else {
-    selectedButton.classList.add('incorrect');
-    optionButtons.forEach(button => {
-      if (button.textContent === currentQuestion.options[currentQuestion.correctAnswerIndex]) {
-        button.classList.add('correct');
+    feedbackMessageEl.className   = 'text-md font-semibold text-green-600';
+  }else{
+    clickedBtn.classList.add('incorrect');
+
+    // highlight real correct button
+    allButtons.forEach(b=>{
+      if (+b.dataset.origIndex === q.correctAnswerIndex){
+        b.classList.add('correct');
       }
     });
+
     feedbackMessageEl.textContent = 'לא נכון.';
-    feedbackMessageEl.className = 'text-md font-semibold text-red-600';
+    feedbackMessageEl.className   = 'text-md font-semibold text-red-600';
   }
 
-  explanationTextEl.textContent = "הסבר: " + currentQuestion.explanation;
+  explanationTextEl.textContent = 'הסבר: ' + q.explanation;
   nextQuestionButtonEl.classList.remove('hidden');
   updateProgressDisplay();
 }
 
-function handleSubmitOpenQuestion() {
-  const currentQuestion = shuffledQuestions[currentQuestionIndex];
+/* --- open-ended submission --- */
+function handleSubmitOpenQuestion(){
+  const q = shuffledQuestions[currentQuestionIndex];
+
   openAnswerInputEl.disabled = true;
   submitOpenAnswerButtonEl.classList.add('hidden');
+
   openEndedCorrectAnswerContainerEl.classList.remove('hidden');
-  openEndedCorrectAnswerEl.innerHTML = currentQuestion.correctAnswerText.replace(/\n/g, '<br>');
-  explanationTextEl.textContent = "הסבר: " + currentQuestion.explanation;
+  openEndedCorrectAnswerEl.innerHTML = q.correctAnswerText.replace(/\n/g,'<br>');
+  explanationTextEl.textContent = 'הסבר: ' + q.explanation;
   openEndedSelfGradeButtonsEl.classList.remove('hidden');
 }
 
-function handleSelfGrade(isCorrect) {
-  if (isCorrect) {
+function handleSelfGrade(ok){
+  if (ok){
     score++;
     feedbackMessageEl.textContent = 'מעולה! התשובה נספרה כנכונה.';
-    feedbackMessageEl.className = 'text-md font-semibold text-green-600';
-  } else {
+    feedbackMessageEl.className   = 'text-md font-semibold text-green-600';
+  }else{
     feedbackMessageEl.textContent = 'לא נורא, לומדים מטעויות.';
-    feedbackMessageEl.className = 'text-md font-semibold text-slate-700';
+    feedbackMessageEl.className   = 'text-md font-semibold text-slate-700';
   }
   openEndedSelfGradeButtonsEl.classList.add('hidden');
   nextQuestionButtonEl.classList.remove('hidden');
   updateProgressDisplay();
 }
 
-function showNextQuestion() {
+/* ---------- NAV ---------- */
+function showNextQuestion(){
   currentQuestionIndex++;
-  if (currentQuestionIndex < shuffledQuestions.length) {
+  if (currentQuestionIndex < shuffledQuestions.length){
     displayQuestion();
-  } else {
+  }else{
     showResults();
   }
 }
 
-function showResults() {
+function showResults(){
   questionAreaEl.classList.add('hidden');
   feedbackAreaEl.classList.add('hidden');
   controlsAreaEl.classList.add('hidden');
+
   resultsAreaEl.classList.remove('hidden');
   finalScoreTextEl.textContent = `הניקוד הסופי שלך הוא: ${score} מתוך ${shuffledQuestions.length}`;
 }
 
-function restartQuiz() {
-  startQuiz();
-}
+function restartQuiz(){ startQuiz(); }
 
-const quizContainer = document.getElementById('quiz-container');
-const progressTextEl = document.getElementById('progress-text');
-const scoreTextEl = document.getElementById('score-text');
-const questionAreaEl = document.getElementById('question-area');
-const questionTextEl = document.getElementById('question-text');
-const optionsContainerEl = document.getElementById('options-container');
-const openEndedContainerEl = document.getElementById('open-ended-container');
-const openAnswerInputEl = document.getElementById('open-answer-input');
-const feedbackAreaEl = document.getElementById('feedback-area');
-const feedbackMessageEl = document.getElementById('feedback-message');
+/* ---------- DOM REFS ---------- */
+const progressTextEl        = document.getElementById('progress-text');
+const scoreTextEl           = document.getElementById('score-text');
+const questionAreaEl        = document.getElementById('question-area');
+const questionTextEl        = document.getElementById('question-text');
+const optionsContainerEl    = document.getElementById('options-container');
+const openEndedContainerEl  = document.getElementById('open-ended-container');
+const openAnswerInputEl     = document.getElementById('open-answer-input');
+const feedbackAreaEl        = document.getElementById('feedback-area');
+const feedbackMessageEl     = document.getElementById('feedback-message');
 const openEndedCorrectAnswerContainerEl = document.getElementById('open-ended-correct-answer-container');
-const openEndedCorrectAnswerEl = document.getElementById('open-ended-correct-answer');
-const explanationTextEl = document.getElementById('explanation-text');
-const controlsAreaEl = document.getElementById('controls-area');
-const submitOpenAnswerButtonEl = document.getElementById('submit-open-answer-button');
+const openEndedCorrectAnswerEl          = document.getElementById('open-ended-correct-answer');
+const explanationTextEl     = document.getElementById('explanation-text');
+const controlsAreaEl        = document.getElementById('controls-area');
+const submitOpenAnswerButtonEl   = document.getElementById('submit-open-answer-button');
 const openEndedSelfGradeButtonsEl = document.getElementById('open-ended-self-grade-buttons');
-const selfGradeCorrectButtonEl = document.getElementById('self-grade-correct-button');
+const selfGradeCorrectButtonEl   = document.getElementById('self-grade-correct-button');
 const selfGradeIncorrectButtonEl = document.getElementById('self-grade-incorrect-button');
-const nextQuestionButtonEl = document.getElementById('next-question-button');
-const resultsAreaEl = document.getElementById('results-area');
-const finalScoreTextEl = document.getElementById('final-score-text');
-const restartQuizButtonEl = document.getElementById('restart-quiz-button');
+const nextQuestionButtonEl  = document.getElementById('next-question-button');
+const resultsAreaEl         = document.getElementById('results-area');
+const finalScoreTextEl      = document.getElementById('final-score-text');
+const restartQuizButtonEl   = document.getElementById('restart-quiz-button');
 
+/* ---------- EVENTS ---------- */
 submitOpenAnswerButtonEl.addEventListener('click', handleSubmitOpenQuestion);
-selfGradeCorrectButtonEl.addEventListener('click', () => handleSelfGrade(true));
-selfGradeIncorrectButtonEl.addEventListener('click', () => handleSelfGrade(false));
+selfGradeCorrectButtonEl.addEventListener('click', ()=>handleSelfGrade(true));
+selfGradeIncorrectButtonEl.addEventListener('click', ()=>handleSelfGrade(false));
 nextQuestionButtonEl.addEventListener('click', showNextQuestion);
 restartQuizButtonEl.addEventListener('click', restartQuiz);
 
+/* ---------- GO! ---------- */
 document.addEventListener('DOMContentLoaded', loadQuestions);
 </script>
 </body>
