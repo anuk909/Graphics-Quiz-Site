@@ -403,9 +403,9 @@
   },
   {
     "type": "open",
-    "question": "כיצד Modulation + Demodulation שומר על איזון ערוצים ב-StyleGAN2?",
-    "correctAnswerText": "ה-modulation מכפיל כל פילטר בסקלת סגנון ותפור לפי \( w \); demodulation מנרמל את הפילטרים חזרה כך שלכל ערוץ תהיה עוצמה דומה, וכך נמנעים קפיצות ערכים שיוצרות ארטיפקטים.",
-    "explanation": "הנירמול מצמצם סטיות ומפחית קווים מלאכותיים. :contentReference[oaicite:26]{index=26}:contentReference[oaicite:27]{index=27}"
+    "question": "כיצד Modulation + Demodulation שומרים על יציבות הערוצים ב-StyleGAN2?",
+    "correctAnswerText": "modulation מכפיל את הפילטרים לפי וקטור סגנון שמופק מ-w, ו-demodulation מנרמל את הפילטרים כך שהערוצים לא יהיו מוקצנים מדי. השילוב שומר על סטטיסטיקה מאוזנת ומפחית ארטיפקטים כמו קווים לא רצויים.",
+    "explanation": "המודולציה שולטת בסגנון; הדה-מודולציה מאזנת את האנרגיה בכל ערוץ ומונעת תופעות מלאכותיות שבלטו ב-StyleGAN1."
   },
   {
     "type": "open",
