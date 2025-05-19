@@ -69,7 +69,7 @@ let score = 0;
 
 async function loadQuestions() {
   try {
-    const response = await fetch('questions.json');
+    const response = await fetch('questions1.json');
     const data = await response.json();
     ALL_QUESTIONS = data;
     shuffledQuestions = [...ALL_QUESTIONS];
@@ -79,7 +79,7 @@ async function loadQuestions() {
     }
     startQuiz();
   } catch (e) {
-    alert("שגיאה בטעינת הקובץ questions.json");
+    alert("שגיאה בטעינת הקובץ questions1.json");
     console.error(e);
   }
 }
