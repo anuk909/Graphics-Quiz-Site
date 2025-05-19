@@ -359,9 +359,6 @@
     "correctAnswerIndex": 1,
     "explanation": "Self-Attention מחשב את הדמיון בין כל זוג קודים ולכן העלות חישובית ריבועית במספר הקוד n :contentReference[oaicite:53]{index=53}:contentReference[oaicite:54]{index=54}"
   },
-
-  /* 30 אמריקאיות הסתיימו, כעת 20 פתוחות */
-
   {
     "type": "open",
     "question": "תאר בקצרה את התהליך המרכזי של StyleGAN-NADA.",
