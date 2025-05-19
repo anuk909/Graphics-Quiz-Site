@@ -251,53 +251,53 @@
     "correctAnswerText": "יתרון: העריכה מתבצעת במהירות בזמן ריצה הודות ל-forward יחיד; חיסרון: היא פחות מותאמת אישית ועלולה להיות פחות מדויקת כי המיפוי נלמד באופן כללי מראש.",
     "explanation": "Mapper = מהיר אך גנרי; Optimization = איטי אך מותאם לדוגמה הספציפית."
   },
-  {
+    {
     "type": "mc",
-    "question": "לפי ההרצאה, מה הופך את Single-Image Learning לאפשרי למרות שיש רק תמונה אחת?",
+    "question": "מהו הרעיון המרכזי של Single-Image Learning שהודגש בהרצאה?",
     "options": [
-      "שימוש במודל טרנספורמר מאומן מראש",
-      "חזרתיות פנימית של טלאים ברמות קנה-מידה שונות באותה תמונה",
-      "תוספת רעש משתנה בכל איטרציה שמדמה דאטה חיצוני",
-      "התניה על תוויות סמנטיות שמופקות מאלגוריתם חיצוני"
+      "שימוש במיליוני תמונות כדי ללמוד סגנון אחיד",
+      "ניצול חזרתיות פנימית בטלאים של תמונה בודדת כדי ללמוד ממנה לבדה",
+      "החלפת כל שכבות הקונבולוציה בשכבות Fully Connected",
+      "חיבור בין שתי תמונות שונות ליצירת תבנית ביניים"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "טלאים דומים חוזרים שוב ושוב בתמונה, ולכן הרשת יכולה ללמוד מהם ללא צורך במאגר חיצוני. :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}"
+    "explanation": "טלאים דומים מופיעים שוב ושוב בתמונה, ולכן הרשת יכולה ללמוד מבנה ומרקם גם ללא דאטה חיצוני."
   },
   {
     "type": "mc",
-    "question": "מהו גורם המפתח שמונע מ-DIP ללמוד גם את הרעש הלא רצוי בתמונה?",
+    "question": "מהו הגורם שמונע מ-DIP ללמוד גם את הרעש בתמונה בעת denoising?",
     "options": [
       "שימוש ב-Dropout גבוה",
       "Early Stopping מוקפד במהלך האופטימיזציה",
       "החלפת L2 ב-Perceptual Loss",
-      "הזרקה של רעש משתנה בכל צעד"
+      "הזרקת רעש משתנה בכל צעד"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "אם עוצרים מוקדם, הרשת משחזרת את המבנה אך לא מספיקה להתאים את עצמה לרעש. :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}"
+    "explanation": "עוצרים את האימון ברגע שהמבנה שוחזר היטב; אם ממשיכים, הרשת תתחיל להתאים את עצמה גם לרעש."
   },
   {
     "type": "mc",
-    "question": "Patch Entropy נמוכה בתמונה מצביעה על כך ש-DIP…",
+    "question": "Patch Entropy נמוכה בתמונה מצביעה לרוב על כך ש-DIP…",
     "options": [
       "יתקשה לשחזר את המבנה",
       "יצליח לשחזר בקלות בשל דמיון חוזר בין טלאים",
-      "ידרוש יותר שכבות ב-U-Net",
-      "יהיה חסין מפני Overfitting ללא Early Stopping"
+      "ידרוש רשת עמוקה במיוחד",
+      "יהיה חסין מפני overfitting גם ללא Early Stopping"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "תמונות עם חזרתיות מסודרת (אנטרופיה נמוכה) ניתנות לשחזור מדויק יותר. :contentReference[oaicite:4]{index=4}:contentReference[oaicite:5]{index=5}"
+    "explanation": "חזרתיות גבוהה (אנטרופיה נמוכה) מקלה על הרשת לשחזר ולסנן רעש."
   },
   {
     "type": "mc",
-    "question": "Double-DIP משתמש ב-Exclusion Loss כדי…",
+    "question": "Double-DIP משתמש ב-Exclusion Loss על מנת…",
     "options": [
-      "לאלץ את שתי רשתות ה-DIP לשחזר אזורים לא חופפים",
+      "לאלץ את שתי רשתות DIP לשחזר אזורים שונים ללא חפיפה",
       "להגביר חדות גלובלית בעזרת Perceptual Loss",
-      "לכייל אוטומטית את ה-learning rate",
+      "לכייל אוטומטית את ‎learning rate",
       "לבטל את הצורך במסכה בינארית"
     ],
     "correctAnswerIndex": 0,
-    "explanation": "ה-Exclusion Loss בודק שהרכיבים הנפרדים אינם משתפים תבניות סטטיסטיות. :contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}"
+    "explanation": "ה-Loss בודק שהפלטים הסטטיסטיים של שתי הרשתות אינם דומים, וכך מפריד רכיבים (למשל אובייקט ורקע)."
   },
   {
     "type": "mc",
@@ -306,111 +306,111 @@
       "כדי לעודד את המסכה להיות ברזולוציה נמוכה",
       "כדי להפוך את המסכה לבינארית וברורה",
       "כדי להפחית את זמן האימון",
-      "כדי לייצר וריאציות רנדומליות ברקע"
+      "כדי ליצור וריאציות רנדומליות ברקע"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "Entropy Loss נמוך דוחף את המסכה לערכים 0/1 ומפריד היטב בין השכבות. :contentReference[oaicite:8]{index=8}:contentReference[oaicite:9]{index=9}"
+    "explanation": "ענישת ערכי ביניים דוחפת את הפיקסלים לערכים 0 או 1 ומחדדת את ההפרדה בין השכבות."
   },
   {
     "type": "mc",
-    "question": "איזה היגד מתאר נכונה את אימון SinGAN?",
+    "question": "איזה תהליך אימון מאפיין את SinGAN?",
     "options": [
-      "מאמנים Generator יחיד על התמונה ברזולוציה המקורית בלבד",
-      "מאמנים זוג Generator–Discriminator לכל רמת רזולוציה בפירמידה באופן פרוגרסיבי",
-      "דורשים סט תמונות דומות בגודל משתנה",
-      "משתמשים ב-StyleGAN כ-backbone"
+      "GAN יחיד ברזולוציה המקורית בלבד",
+      "פירמידת זוגות Generator–Discriminator, אחד לכל רזולוציה, המאומנת פרוגרסיבית",
+      "סט תמונות חיצוני עם תוויות סגנון",
+      "שימוש ב-StyleGAN כ-backbone"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "SinGAN בונה פירמידה; בכל רמה מאמנים GAN קטן ואז עוברים לרמה הבאה. :contentReference[oaicite:10]{index=10}:contentReference[oaicite:11]{index=11}"
+    "explanation": "מאמנים קודם ברזולוציה נמוכה, מוסיפים פרטים ברזולוציות גבוהות יותר, ומונעים קריסה של הגנרטור."
   },
   {
     "type": "mc",
-    "question": "חיסרון מעשי של SinGAN לפי ההרצאה הוא…",
+    "question": "מהי מגבלה מעשית של SinGAN כפי שהוזכרה בהרצאה?",
     "options": [
-      "תלות ב-paired data",
-      "אימון ארוך לכל תמונה חדשה והגיוון מוגבל לחזרתיות הפנימית",
-      "חוסר יכולת לעבוד על תמונות מתחת ל-256×256",
+      "תלות בזוגות תמונות מתואמות",
+      "אימון ארוך לכל תמונה והגיוון מוגבל לחזרתיות הפנימית",
+      "חוסר יכולת לעבוד על תמונות קטנות מ-256×256",
       "רגישות גבוהה לרעש בקלט"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "צריך לאמן מודל מהתחלה לכל תמונה, והווריאציות נשענות רק על התבניות החוזרות בתמונה. :contentReference[oaicite:12]{index=12}:contentReference[oaicite:13]{index=13}"
+    "explanation": "צריך לאמן מודל מחדש לכל תמונה, והווריאציות נובעות רק מתבניות שמצויות בתמונה עצמה."
   },
   {
     "type": "mc",
-    "question": "איזו בעיה מרכזית ב-StyleGAN1 מודולציה + Demodulation ב-StyleGAN2 פותרת?",
+    "question": "Modulation + Demodulation ב-StyleGAN2 פותר בעיקר…",
     "options": [
-      "חוסר שליטה ברמת הרזולוציה",
-      "ארטיפקטים כמו קווים דמויי קופסה בתמונות",
-      "Mode Collapse קבוע",
+      "חוסר שליטה ברזולוציה",
+      "ארטיפקטים כמו קווים חוזרים שבלטו ב-StyleGAN1",
+      "Mode Collapse מתמשך",
       "צריכת זיכרון גבוהה ב-Discriminator"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "האיזון בין הערוצים מפחית קווים ותבניות מלאכותיות שהופיעו ב-StyleGAN1. :contentReference[oaicite:14]{index=14}:contentReference[oaicite:15]{index=15}"
+    "explanation": "נרמול הערוצים לאחר המודולציה מונע קווים ותבניות מלאכותיות."
   },
   {
     "type": "mc",
-    "question": "GANSpace מגלה כיווני עריכה ב-StyleGAN על-ידי…",
+    "question": "GANSpace מגלה כיווני עריכה במרחב הלטנט באמצעות…",
     "options": [
-      "שימוש ב-CLIP Loss וטקסט",
-      "ביצוע PCA על האקטיבציות הפנימיות של הרשת",
-      "אימון Discriminator נוסף",
+      "CLIP Loss וטקסט חופשי",
+      "PCA על האקטיבציות הפנימיות של StyleGAN",
+      "אימון Discriminator נוסף עם תוויות גיל ומגדר",
       "השוואת תמונות אמיתיות לפלטי הגנרטור"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "ניתוח רכיבי PCA חושף כיוונים שמשנים תכונות כמו תאורה או הבעה. :contentReference[oaicite:16]{index=16}:contentReference[oaicite:17]{index=17}"
+    "explanation": "تحليل PCA חושף צירים סמנטיים עיקריים ללא תוויות."
   },
   {
     "type": "mc",
-    "question": "StyleCLIP – Latent Optimization משנה תמונה כך שתתאים לטקסט על-ידי…",
+    "question": "ב-StyleCLIP – Latent Optimization, מה מעודכּן על-ידי ה-Gradient?",
     "options": [
-      "עדכון משקולות הגנרטור מאפס",
-      "Gradient Descent ישירות על קוד הלטנט של התמונה",
-      "שימוש ב-Random Noise משתנה בכל צעד",
-      "החלפת ה-Discriminator במודל CLIP"
+      "משקולות הגנרטור כולו",
+      "הקוד הלטנטי של התמונה בלבד",
+      "רק וקטור רעש ב-Z-space",
+      "שכבת ה-Discriminator הסופית"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "מבצעים אופטימיזציה על הלטנט כדי למזער את CLIP Loss לעבר הטקסט. :contentReference[oaicite:18]{index=18}:contentReference[oaicite:19]{index=19}"
+    "explanation": "מבצעים Descent ישירות על הלטנט כך שהתמונה תתאים לטקסט במרחב CLIP."
   },
   {
     "type": "mc",
-    "question": "למה Latent Mapper של StyleCLIP נחשב מהיר יותר אך פחות מדויק מ-Latent Optimization?",
+    "question": "Latent Mapper ב-StyleCLIP מהיר אך פחות מותאם אישית משום שהוא…",
     "options": [
-      "הוא דל בפרמטרים ולכן סובל ממוד קאלפס",
-      "הוא רשת feed-forward קבועה שאינה מותאמת לתמונה הספציפית",
-      "הוא מחליף את CLIP בשכבת Softmax בלבד",
-      "הוא משתמש רק במרחב Z ולא ב-W או S"
+      "דל בפרמטרים וסובל מ-mode collapse",
+      "רשת feed-forward קבועה שאינה מותאמת לתמונה הספציפית",
+      "מחליף את CLIP בשכבת Softmax",
+      "משתמש רק במרחב Z ולא ב-W"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "ה-Mapper פועל בפס יחיד ללא התאמה ספציפית ולכן מהיר אך גנרי." 
+    "explanation": "ה-Mapper לומד כללית מראש; בעת ריצה אינו מבצע אופטימיזציה ספציפית ולכן מהיר אך 'גנרי'."
   },
   {
     "type": "open",
-    "question": "הסבר בקצרה כיצד Entropy Loss תורם לבינאריות של המסכה ב-Double-DIP.",
-    "correctAnswerText": "Entropy Loss מעניש פיקסלים עם ערכי ביניים במסכה, ובכך דוחף אותם לערכים 0 או 1. התוצאה היא מסכה חדה ומופרדת המבהירה אילו פיקסלים שייכים לכל רכיב.",
-    "explanation": "בינאריות חשובה כדי שכל רשת DIP תלמד חלק ייחודי ללא חפיפה. :contentReference[oaicite:20]{index=20}:contentReference[oaicite:21]{index=21}"
+    "question": "כיצד Entropy Loss תורם להפיכת המסכה ב-Double-DIP לבינארית?",
+    "correctAnswerText": "ה-Loss מעניש פיקסלים בעלי ערכי ביניים במסכה ומעודד אותם להתכנס ל-0 או 1, כך שהמסכה הופכת חדה וברורה.",
+    "explanation": "בינאריות מובהקת מאפשרת לכל רשת DIP ללמוד רכיב ייחודי בלי חפיפה."
   },
   {
     "type": "open",
-    "question": "מדוע Early Stopping חיוני ב-Deep Image Prior כאשר מבצעים denoising?",
-    "correctAnswerText": "אם ממשיכים לאמן מעבר לנקודת האיזון, הרשת תתחיל לשחזר גם את רעש התמונה. עצירה מוקדמת מאפשרת לשחזר את המבנה בלבד ולהשאיר את הרעש מחוץ לפלט.",
-    "explanation": "הרשת לומדת מן הקל אל הכבד – קודם מבנה, אחר כך רעש – ולכן צריך לעצור בזמן. :contentReference[oaicite:22]{index=22}:contentReference[oaicite:23]{index=23}"
+    "question": "למה Early Stopping חיוני ב-Deep Image Prior בעת סילוק רעש?",
+    "correctAnswerText": "בשלב מוקדם הרשת משחזרת את המבנה; אם ממשיכים לאמן היא גם תלמד את הרעש. עצירה בזמן מונעת זאת ומשאירה פלט נקי.",
+    "explanation": "הרשת לומדת לפי סדר 'קל-לקשה': מבנה קודם, רעש אחר-כך."
   },
   {
     "type": "open",
-    "question": "תאר את פירמידת האימון של SinGAN ולמה היא מפחיתה Mode Collapse.",
-    "correctAnswerText": "האימון מתחיל בגרסה זעירה של התמונה; GAN קטן לומד מבנה גלובלי. הפלט שלו מזין את הרמה הבאה ברזולוציה גבוהה יותר, שבה נוסף פרטי טקסטורה. רמות אלה מאומנות אחת-אחת, כך שהגנרטור אינו צריך לפתור בבת אחת יצירת תמונה מלאה, מה שמפחית את הסיכוי לקרוס לוריאציות זהות.",
-    "explanation": "חלוקה לרמות מורידה מורכבות בכל שלב ומשמרת גיוון. :contentReference[oaicite:24]{index=24}:contentReference[oaicite:25]{index=25}"
+    "question": "תאר בקצרה את שלבי האימון הפרוגרסיבי של SinGAN ולמה הם מונעים Mode Collapse.",
+    "correctAnswerText": "מאמנים GAN קטן על גרסת התמונה ברזולוציה נמוכה, מוסיפים עוד זוג GAN ברזולוציה גבוהה יותר שממשיך מהפלט הקודם, וכן הלאה. בכל שלב המודל פותר תת-בעיה קלה יותר, ולכן נשמר גיוון ואינו קורס לדוגמה יחידה.",
+    "explanation": "חלוקת המשימה לרמות מורידה עומס חיפוש בכל שלב ומשמרת וריאציה."
   },
   {
     "type": "open",
-    "question": "כיצד Modulation + Demodulation שומרים על יציבות הערוצים ב-StyleGAN2?",
-    "correctAnswerText": "modulation מכפיל את הפילטרים לפי וקטור סגנון שמופק מ-w, ו-demodulation מנרמל את הפילטרים כך שהערוצים לא יהיו מוקצנים מדי. השילוב שומר על סטטיסטיקה מאוזנת ומפחית ארטיפקטים כמו קווים לא רצויים.",
-    "explanation": "המודולציה שולטת בסגנון; הדה-מודולציה מאזנת את האנרגיה בכל ערוץ ומונעת תופעות מלאכותיות שבלטו ב-StyleGAN1."
+    "question": "כיצד Modulation + Demodulation מאזן ערוצים ב-StyleGAN2?",
+    "correctAnswerText": "ה-modulation מכפיל את הפילטרים בסקלת סגנון הנגזרת מ-w; ה-demodulation מנרמל אותם כך שלכל ערוץ תהיה עוצמה דומה, ובכך נמנעים קפיצות ערכים שמייצרות ארטיפקטים.",
+    "explanation": "שמירה על ממוצע ואנרגיה יציבים בכל הערוצים מפחיתה קווים ותבניות מלאכותיות."
   },
   {
     "type": "open",
-    "question": "מדוע כיווני עריכה שנמצאו ב-GANSpace נחשבים ללא-מונחים (unsupervised)?",
-    "correctAnswerText": "GANSpace מבצע PCA על האקטיבציות מבלי להשתמש בשום תווית; הכיוונים הסמנטיים נחשפים אוטומטית כתוצאה מהשונות הגבוהה בנתונים.",
-    "explanation": "השיטה לא דורשת תיאור טקסטואלי או תגיות ידניות. :contentReference[oaicite:28]{index=28}:contentReference[oaicite:29]{index=29}"
+    "question": "מדוע כיווני העריכה שנחשפו ב-GANSpace נחשבים ל-Unsupervised?",
+    "correctAnswerText": "הכיוונים מתקבלים על-ידי PCA בלבד, בלי שימוש בתוויות או בטקסט, ולכן מגלים מבני שונות סמנטיים בצורה בלתי-מונחית.",
+    "explanation": "השיטה מסתמכת על סטטיסטיקת האקטיבציות של הרשת ולא על מידע חיצוני."
   }
 ]
