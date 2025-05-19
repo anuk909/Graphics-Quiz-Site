@@ -74,8 +74,8 @@ async function loadQuestions() {
     ALL_QUESTIONS = data;
     shuffledQuestions = [...ALL_QUESTIONS];
     shuffleArray(shuffledQuestions);
-    if (shuffledQuestions.length > 40) {
-      shuffledQuestions = shuffledQuestions.slice(0, 40);
+    if (shuffledQuestions.length > 80) {
+      shuffledQuestions = shuffledQuestions.slice(0, 80);
     }
     startQuiz();
   } catch (e) {
