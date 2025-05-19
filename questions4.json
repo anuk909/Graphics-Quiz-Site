@@ -1,440 +1,479 @@
 [
   {
     "type": "mc",
-    "question": "מה הבעיה העיקרית בניסיון לאפיין רק את ה-w במודל StyleGAN כדי לעבור מדומיין כלבים לדומיין חתולים?",
+    "question": "איזו בעיה מרכזית פותרת StyleGAN-NADA?",
     "options": [
-      "ה-w משנה רק את הטקסטורה אך לא את הצבעים",
-      "ה-מודל כלל לא למד להפיק חתולים ולכן כל וקטור w יישאר בדומיין הכלבים",
-      "ה-w גורם לקריסת Mode Collapse מיידית",
-      "ה-w נמצא במרחב Z ולא במרחב W+"
+      "הסרת רעש סטוכסטי משכבות הרעש של StyleGAN",
+      "התאמת הגנרטור לדומיין חדש בלי תמונות מאותו דומיין",
+      "שיפור חדות הפלט בעזרת Discriminator נוסף",
+      "המרת תמונות אמיתיות לקוד W+ במהירות"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "ללא דוגמאות חתולים המודל אינו מכיר את הדומיין, ולכן הזזת w בלבד לא תייצר אף חתול."
+    "explanation": "השיטה מקפיאה עותק מקורי של הגנרטור ומדייקת עותק מאומן כך שיצייר קטגוריה שלא הופיעה באימון, מבלי להחזיק דאטה של אותה קטגוריה:contentReference[oaicite:0]{index=0}"
   },
   {
     "type": "mc",
-    "question": "מדוע אופטימיזציה ישירה של משקולות הגנרטור בלבד לא פתרה את בעיית הגיוון בדומיין החדש?",
+    "question": "למה אופטימיזציה ישירה של ה-w המקורי לא מספיקה כדי לייצר חתול ממודל שחונך על כלבים?",
     "options": [
-      "המשקולות נהפכו לאורתוגונליות מדי",
-      "כל וקטור w מופה לאותה תמונה כמעט זהה, ולכן אין שונות",
-      "ה-Discriminator סירב להתעדכן במקביל",
-      "CLIP דורש וקטור טקסט נוסף בכל צעד"
-    ],
-    "correctAnswerIndex": 1,
-    "explanation": "עדכון המשקולות בלי פיקוח מתאים גרם למודל לקרוס לנקודה אחת ולהפיק חתול יחיד."
-  },
-  {
-    "type": "mc",
-    "question": "ב-StyleGAN-NADA משתמשים בשני גנרטורים (G_frozen ו-G_train) כדי…",
-    "options": [
-      "להפחית צריכת זיכרון בזמן אימון",
-      "למדוד כיוון שינוי סמנטי מווקטור לטנט יחיד",
-      "להשוות בין תמונת מקור ופלט מאומן במרחב CLIP לצורך כיוון שינוי רצוי",
-      "לאפשר אימון על דאטה ר噗שיון בלבד"
+      "כי מודל CLIP אינו חלק מהזרימה קדימה",
+      "כיוון שהמרחב W חסום למשקולות קפואות וגיוון נמוך",
+      "משום שהגנרטור כלל לא מכיר חתולים ולכן כל וקטור w יישאר בדומיין הכלבים",
+      "בגלל ש-w תמיד עובר נירמול Demodulation שמגביל סגנון"
     ],
     "correctAnswerIndex": 2,
-    "explanation": "ה-frozen מייצר את הדומיין המקורי, המאומן מנסה להגיע לדומיין חדש; כיוון ההבדל מותאם לכיוון הטקסט ב-CLIP."
+    "explanation": "המודל לא 'יודע' ליצור חתול; הזזת w בלבד תסתובב בתוך אזורי כלביים של ההתפלגות:contentReference[oaicite:1]{index=1}:contentReference[oaicite:2]{index=2}"
   },
   {
     "type": "mc",
-    "question": "איזה Loss מרכזי מנחה את StyleGAN-NADA להשתנות בכיוון הטקסטואלי הרצוי?",
+    "question": "באימון StyleGAN-NADA איזה רכיב קפוא (frozen)?",
     "options": [
-      "Pixel L2 Loss",
-      "CLIP Direction Loss",
-      "Identity Loss (ArcFace)",
-      "Perceptual LPIPS Loss"
+      "ה-Discriminator של StyleGAN",
+      "עותק מקורי של הגנרטור (G_frozen)",
+      "רשת CLIP הטקסטואלית בלבד",
+      "כל שכבות ה-Mapping Network"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "Loss מבוסס CLIP דואג שההפרש בין התמונות יתאים להפרש בין התיאורים בטקסט."
+    "explanation": "משתמשים בשני גנרטורים: G_frozen נשאר ללא עדכון ומייצר את התמונה בדומיין המקורי לצורך חישוב הכיוון ב-CLIP:contentReference[oaicite:3]{index=3}:contentReference[oaicite:4]{index=4}"
   },
   {
     "type": "mc",
-    "question": "Latent Vector Optimization (LVO) מתבצע לרוב במרחב W+ כי…",
+    "question": "מהו היתרון הבולט של Inversion מבוסס-Encoder (למשל pSp) לעומת Latent Optimization?",
     "options": [
-      "W+ גוזר משותף לכל השכבות ומפחית פרמטרים",
-      "מאפשר 18 וקטורי סטייל נפרדים לשכבות, וכך שחזור מדויק וגמיש יותר",
-      "W+ נמנע מכל regularization ולכן מהיר יותר",
-      "ב-W אסור להשתמש ב-Perceptual Loss"
+      "דיוק גבוה יותר במחיר חיפוש איטרטיבי ארוך",
+      "מהירות רבה בזכות Pass יחיד קדימה על חשבון דיוק קטן יותר",
+      "שמירה מוחלטת על זהות הפנים ללא Fine-Tuning",
+      "יכולת לעבוד בדומיין חדש בלי אימון נוסף"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "הקצאת וקטור לכל שכבה מעניקה חופש תאום מקומי ומשפרת איכות שחזור."
+    "explanation": "Encoder מאומן מראש מחזיר מיד וקטור W+ ולכן ההיפוך מיידי, אך השחזור פחות מדויק יחסית לאופטימיזציה איטרטיבית:contentReference[oaicite:5]{index=5}"
   },
   {
     "type": "mc",
-    "question": "Encoder-Based Inversion עדיפה על LVO בעיקר משום ש-…",
+    "question": "Pivotal Tuning Inversion (PTI) משפר דיוק שחזור ע\"י…",
     "options": [
-      "אינה משתמשת ב-StyleGAN כלל",
-      "מספקת קוד לטנט מידי וללא אופטימיזציה איטרטיבית",
-      "דורשת רק Loss מסוג L2",
-      "מבטלת צורך ב-Regularization Loss"
+      "אימון Discriminator נוסף לרזולוציה גבוהה",
+      "טאונינג נקודתי של משקולות הגנרטור סביב תמונה מסוימת",
+      "החלפת AdaIN במנגנון Mod/Demod",
+      "שימוש בקוד לטנטי Z במקום W+"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "Encoder מחזיר w+ ישירות בריצת inference אחת, בניגוד ל-LVO שלוקח עשרות איטרציות."
+    "explanation": "PTI עושה Fine-Tuning קל למשקולות על בסיס הפלט הראשוני כדי לצמצם שגיאות לוקאליות של התמונה המסוימת:contentReference[oaicite:7]{index=7}:contentReference[oaicite:8]{index=8}"
   },
   {
     "type": "mc",
-    "question": "ב-pSp Encoder משתמשים בזוגות (Edge Map, Image) כדי…",
+    "question": "HyperStyle מוסיף לרשת הגנרטור…",
     "options": [
-      "להפוך Edge Map ישירות לתמונה ריאליסטית דרך StyleGAN",
-      "ללמוד קוונטיזציה דיסקרטית ב-codebook",
-      "לאמן Discriminator נוסף למרחב ה-w",
-      "לשפר CLIP Loss עבור כיווני טקסט"
+      "שכבות Self-Attention גלובליות",
+      "רשת Δ קטנה שמניבה תיקון משקולות מותאם לתמונה",
+      "קוד רעש דינמי פר-פיקסל",
+      "Decoder נוסף לרזולוציה גבוהה"
+    ],
+    "correctAnswerIndex": 1,
+    "explanation": "HyperStyle מאמן רשת קטנה שמנבאת דלתא למשקולות, וכך משיג שחזור מדויק מבלי לעבור Fine-Tuning ארוך לכל תמונה:contentReference[oaicite:9]{index=9}"
+  },
+  {
+    "type": "mc",
+    "question": "מדוע משתמשים במרחב W+ ולא ב-W באינברסיה של תמונות?",
+    "options": [
+      "כי W+ מותאם ל-CLIP ומחזיר טקסט חופשי",
+      "כדי לאפשר וקטור שונה בכל שכבה לשחזר פרטים עדינים",
+      "כיוון שהוא צורך פחות זיכרון GPU",
+      "מפני שהוא מונע Demodulation בשכבות"
+    ],
+    "correctAnswerIndex": 1,
+    "explanation": "הגדלת דרגת החופש (וקטור נפרד לכל שכבה) מאפשרת תיקון גם במבנה וגם בטקסטורה לשחזור צמוד למקור:contentReference[oaicite:10]{index=10}"
+  },
+  {
+    "type": "mc",
+    "question": "איזה שימוש הדגימה ההרצאה ל-Encoder Inversion מעבר ל-\"Invert & Edit\"?",
+    "options": [
+      "In-painting ללא מסכה",
+      "Edge-Map → Image ליצירת תמונות ריאליסטיות מקווי מתאר",
+      "דחיסת תמונה לארכיון Codebook",
+      "שחזור עומק (Depth) בהפרדה"
+    ],
+    "correctAnswerIndex": 1,
+    "explanation": "כאשר מאמנים את ה-Encoder על זוגות קווי מתאר/תמונה, אפשר להפוך סקיצה לתמונה פוטוריאליסטית בזכות כוחו של StyleGAN:contentReference[oaicite:12]{index=12}:contentReference[oaicite:13]{index=13}"
+  },
+  {
+    "type": "mc",
+    "question": "כיצד מפורקת הסתברות התמונה במודל אוטורגרסיבי?",
+    "options": [
+      "p(x)=Σp(x_i)",
+      "p(x)=Π p(x_i | x_{<i})",
+      "p(x)=max p(x_i)",
+      "p(x)=Mean p(x_i)"
+    ],
+    "correctAnswerIndex": 1,
+    "explanation": "ה-AR מחלק את הקלט לרצף וּמודל את ההסתברות המותנית של כל חלק על קודמיו, כלומר מכפלת תנאים סדרתית:contentReference[oaicite:14]{index=14}:contentReference[oaicite:15]{index=15}"
+  },
+  {
+    "type": "mc",
+    "question": "PixelCNN משתמש ב-Masked Convolution בעיקר כדי…",
+    "options": [
+      "למנוע התפוצצות גרדיאנט ברזולוציה גבוהה",
+      "לא לאפשר לפיקסל הנוכחי לראות פיקסלים עתידיים בסריקה",
+      "להקטין את מספר הפרמטרים פי ארבעה",
+      "לשלב Self-Attention חישובי"
+    ],
+    "correctAnswerIndex": 1,
+    "explanation": "אפסים במסנן מבטיחים שהרשת נשענת רק על פיקסלים שכבר נוצרו וכך משמרת את הסדר האוטורגרסיבי התקף:contentReference[oaicite:16]{index=16}:contentReference[oaicite:17]{index=17}"
+  },
+  {
+    "type": "mc",
+    "question": "מגבלה בולטת של PixelCNN שהוזכרה בהרצאה היא…",
+    "options": [
+      "דגימות מטושטשות ואיטיות מאוד ברזולוציות גבוהות",
+      "קושי בלמידה מבוססת CLIP",
+      "חוסר יכולת לעבוד עם קוד דיסקרטי",
+      "הישענות על תוויות מפוקחות"
     ],
     "correctAnswerIndex": 0,
-    "explanation": "ה-Encoder ממפה קלט מבני (קווים, סגמנטציה) לווקטורי W+ שהגנרטור מתרגם לתמונה ברורה."
+    "explanation": "המודל יוצר תמונות 32×32-64×64 לא חדות ודגימה פיקסל-אחר-פיקסל גוזלת זמן רב:contentReference[oaicite:18]{index=18}"
   },
   {
     "type": "mc",
-    "question": "ב-Designing an Encoder for Manipulation מוסיפים Discriminator על מרחב W כדי…",
+    "question": "VQ-VAE מציג ייצוג דיסקרטי בעזרת…",
     "options": [
-      "לאכוף שהפלט של ה-Encoder קרוב להתפלגות W ולפיכך עריך",
-      "לבדוק אם הקלט שייך לדומיין הכלבים",
-      "למנוע Mode Collapse בין שכבות W+",
-      "להגביר חדות בשחזור"
+      "קואנטיזציה של וקטורי הפיצ'ר לקודבוק סופי",
+      "החלת Masked Convolution בכל שכבה",
+      "Demodulation גלובלי על וקטורים",
+      "קרוס-אטנשן בין פאטצ'ים"
     ],
     "correctAnswerIndex": 0,
-    "explanation": "Discriminator מבחין בין וקטור W אמיתי לזה שמגיע מן ה-Encoder וכך מאלץ קרבה ל-W."
+    "explanation": "Encoder מחפש לכל וקטור את הערך הקרוב ביותר ב-Codebook וכך דוחס את התמונה למפת סמלים קומפקטית:contentReference[oaicite:19]{index=19}:contentReference[oaicite:20]{index=20}"
   },
   {
     "type": "mc",
-    "question": "Pivotal Tuning (PTI) מעדכן…",
+    "question": "מדוע שחזורי VQ-VAE נוטים להיות מטושטשים?",
     "options": [
-      "רק את הקוד w אחרי inversion",
-      "רק את משקולות הגנרטור, תוך שמירת w קבוע",
-      "גם w וגם Discriminator",
-      "רק את HyperNetwork קטן"
+      "ה-Decoder חסר שכבות Upsample",
+      "אין Loss אדברסריאלי ואיבוד קשרים גלובליים",
+      "שימוש בדלתא משקולות מקומיות בלבד",
+      "ה-Codebook קטן מדי ומאלץ חזרתיות"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "PTI משפר שחזור בכך שמכוונן מקומית את הגנרטור סביב w בודד מבלי לשנותו."
+    "explanation": "ללא Discriminator נוסף התמונות נשענות רק על Loss שחזור ולכן מאבדות חדות ופרטים גלובליים:contentReference[oaicite:21]{index=21}:contentReference[oaicite:22]{index=22}"
   },
   {
     "type": "mc",
-    "question": "ב-HyperStyle, HyperNetwork מפיקה Δ (תוספת) למשקולות הגנרטור כדי…",
+    "question": "VQ-GAN מוסיף ל-VQ-VAE שני מרכיבים עיקריים: Discriminator ו-…",
     "options": [
-      "להבטיח Identity Loss אפסי",
-      "לתקן את השחזור בזמן ריצה יחיד בלי Fine-Tuning ארוך",
-      "להקטין את גודל הקובץ של הגנרטור",
-      "לבנות codebook דיסקרטי חדש"
-    ],
-    "correctAnswerIndex": 1,
-    "explanation": "ה-Δ מחוברת למשקולות הקבועות ומחזירה שחזור משופר ללא אופטימיזציה איטרטיבית."
-  },
-  {
-    "type": "mc",
-    "question": "ב-PixelCNN משתמשים ב-Masked Convolution כדי…",
-    "options": [
-      "לצמצם מספר פרמטרים",
-      "למנוע דליפת מידע מפיקסלים עתידיים ולשמור אוטורגרסיביות",
-      "לשפר חדות באמצעות GAN",
-      "לאפשר Attention לטווח ארוך"
-    ],
-    "correctAnswerIndex": 1,
-    "explanation": "המסכה מאפסת פילטרים שמביטים ימינה/מטה ובכך מבטיחה תלות רק בעבר."
-  },
-  {
-    "type": "mc",
-    "question": "חיסרון עיקרי של PixelCNN הוא…",
-    "options": [
-      "אין יכולת לייצר תמונות מותנות",
-      "דגימה איטית ואיכות מוגבלת לרזולוציות נמוכות",
-      "חוסר במנגנון Self-Attention",
-      "שימוש ברעש לבן בלבד"
-    ],
-    "correctAnswerIndex": 1,
-    "explanation": "ייצור פיקסל-אחר-פיקסל איטי, והתמונות ברזולוציה קטנה נראות מטושטשות."
-  },
-  {
-    "type": "mc",
-    "question": "ב-VQ-VAE, ה-Commitment Loss נועד…",
-    "options": [
-      "לחייב את ה-Encoder להישאר קרוב ל-codebook ולהקטין ריצוד",
-      "לשמור על חדות השחזור",
-      "לאמן Discriminator נוסף ל-GAN",
-      "לכייל את ה-Transformer"
+      "Transformer הלומד את התפלגות הקודים",
+      "Masked Conv נוסף בלייר האחרון",
+      "שכבת Modulation-Demodulation",
+      "רשת Δ לשחזור פרטים"
     ],
     "correctAnswerIndex": 0,
-    "explanation": "ה-Encoder 'מתחייב' לבחור קודbook קיים ולא להתרחק למקומות שה-Decoder לא מכיר."
+    "explanation": "GAN-Loss משחיז תמונה ו-Transformer על רצף הקודים לוכד קשרים רחוקים לשיפור קוהרנטיות:contentReference[oaicite:23]{index=23}"
   },
   {
     "type": "mc",
-    "question": "מה החידוש המרכזי ששיפר VQ-GAN ביחס ל-VQ-VAE?",
+    "question": "Self-Attention במודל אוטורגרסיבי של VQ-GAN מאפשר…",
     "options": [
-      "החלפת Decoder בקונבולוציה ממוסכת",
-      "הוספת GAN Loss ו-Transformer על הקודים לשיפור חדות וקשרים גלובליים",
-      "הסרת ה-codebook ובחירה רציפה במקום דיסקרטית",
-      "עבודה ישירה ברמת פיקסלים ללא קוד דיסקרטי"
+      "חסכון בזיכרון ליניארי לגודל הקלט",
+      "למידת קשרים גלובליים בין אזורים רחוקים בתמונה",
+      "הפחתת צורך ב-Codebook",
+      "ביטול Masked Convolution"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "GAN Loss מחדד תמונה, Transformer לומד תלות רחוקה בקודים ומגביר קוהרנטיות."
+    "explanation": "כל פיקסל 'שואל' על אחרים דרך Q,K,V ומקבל ייצוג עשיר המחבר חלקים מרוחקים של התמונה:contentReference[oaicite:24]{index=24}"
   },
   {
     "type": "mc",
-    "question": "Self-Attention בשכבת Transformer מחשב מפה המבוססת על…",
+    "question": "מה החיסרון העיקרי של Self-Attention שהודגש?",
     "options": [
-      "מכפלת Query-Key ו-Softmax",
-      "L2 pixel distance",
-      "Conv 3×3 רקורסיבי",
-      "Random Fourier features"
+      "אובדן חזרה פנימית בתמונה",
+      "מורכבות חישובית ריבועית בגודל הקלט",
+      "בעיית Mode Collapse מתמשכת",
+      "רגישות גבוהה ללמידת יתר"
+    ],
+    "correctAnswerIndex": 1,
+    "explanation": "לכל שכבת Attention עלות O(n²), מה שהופך אותה יקרה במיוחד לתמונות גדולות:contentReference[oaicite:25]{index=25}:contentReference[oaicite:26]{index=26}"
+  },
+  {
+    "type": "mc",
+    "question": "היררכיית Top/Bottom ב-VQ-VAE-2 משמשת ל…",
+    "options": [
+      "הפרדת מבנה גלובלי מפרטים עדינים לשיפור רזולוציה",
+      "דילול משקלים לחיסכון בזיכרון",
+      "למידת קוד לטנט רציף",
+      "ביטול צורך ב-Discriminator"
     ],
     "correctAnswerIndex": 0,
-    "explanation": "Query×Key יוצר משקלים, Softmax מנרמל ומשמש חלוקת קשב."
+    "explanation": "קודם מקודדים את השלד הכללי בשכבת Top, אחר-כך מוסיפים חדות דרך Bottom וכך שומרים גם איכות וגם דחיסה :contentReference[oaicite:27]{index=27}:contentReference[oaicite:28]{index=28}"
   },
   {
     "type": "mc",
-    "question": "מדוע Transformer דורש חישובים בריבוע למספר הקודים?",
+    "question": "איזו נוסחת רגולריזציה מוסיפים ב-pSp כדי לייצב את קודי W+?",
     "options": [
-      "כל קוד משודר פעמיים ל-Decoder",
-      "יש צורך להשוות כל Query לכל Key ברצף",
-      "Gradient Clipping מתבצע פעמיים",
-      "Because Softmax הוא O(n-log-n)"
+      "L1 בין פיקסלים",
+      "KL Divergence לנורמלית",
+      "Distance Loss אל הקוד הממוצע במרחב W",
+      "Orthogonality Loss על משקולות"
+    ],
+    "correctAnswerIndex": 2,
+    "explanation": "Regularization מושך את הקוד לכיוון μ_W ומונע חריגה לאזורים שבהם הגנרטור מפיק תוצאות גרועות:contentReference[oaicite:29]{index=29}:contentReference[oaicite:30]{index=30}"
+  },
+  {
+    "type": "mc",
+    "question": "ב-HyperStyle, רשת ה-Δ מאומנת לחזות…",
+    "options": [
+      "שינוי בקוד w",
+      "תיקון משקולות ברמת פילטרים לגנרטור",
+      "מסכת Attention על שכבות",
+      "דחיסת קוד Z לרצף קצר"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "Self-Attention מחייב חיבורי Query–Key עבור כל זוג ולכן O(n²)."
+    "explanation": "ה-Δ מחזיר וקטור תיקונים שמחובר למשקולות המקוריות וכך מותאם לחסרונות המקומיים של שחזור התמונה:contentReference[oaicite:31]{index=31}:contentReference[oaicite:32]{index=32}"
   },
   {
     "type": "mc",
-    "question": "בקוד היררכי של VQ-GAN, שכבת top-level מקודדת…",
+    "question": "ב-PixelCNN מותנה, הווקטור h מייצג…",
     "options": [
-      "פרטים טקסטורליים",
-      "מבנה גלובלי גס של התמונה",
-      "רעש סטוכסטי בלבד",
-      "וקטור טקסט CLIP"
+      "את קוד ה-Codebook שנבחר",
+      "קטגוריה או תווית רצויה המזרימה מידע נוסף",
+      "שכבת Noise סטוכסטית",
+      "ווקטור Δ משקולות"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "top מייצג פריסה כללית; bottom מוסיף חדות ותדר גבוה."
-  },
-  {
-    "type": "open",
-    "question": "כיצד CLIP משמש גשר בין טקסט לתמונה בשיטת StyleGAN-NADA?",
-    "correctAnswerText": "CLIP ממפה גם תמונות וגם טקסט לאותו מרחב אמבדינג. בנאדה מודדים את וקטור השינוי בין תמונת המקור (מה-G_frozen) לתמונת ה-G_train במרחב זה, ומשווים אותו לכיוון בין הטקסט המקורי לטקסט היעד. המטרה היא ליישר את שני הכיוונים, כך שהשינוי בתמונה ישקף את המשמעות הסמנטית של שינוי הטקסט.",
-    "explanation": "הקבלה של כיוון תמונה-תמונה לכיוון טקסט-טקסט הופכת הבדל לשינוי מבוקר."
-  },
-  {
-    "type": "open",
-    "question": "תאר Trade-off בין Fidelity לעריכות בסביבת W+ כפי שהוצג בהרצאה.",
-    "correctAnswerText": "שחזור מדויק דורש להתרחק מ-W ולהשתמש ב-W+ חופשי; אך עריכה סמנטית עובדת טוב רק לקודים קרובים ל-W. לכן Encoder מצומצם מדי פוגם בשחזור, ואילו Encoder חופשי מדי פוגם בעריכות.",
-    "explanation": "צריך לאזן: קרוב מספיק ל-W לקבלת כיווני עריכה, אך עשיר מספיק בשכבות לשחזור."
-  },
-  {
-    "type": "open",
-    "question": "למה HyperStyle מסוגל לשמור את כיווני העריכה של StyleGAN גם אחרי שיפור השחזור?",
-    "correctAnswerText": "HyperStyle לא משנה את משקולות הגנרטור בסיסית; הוא מוסיף Δ קטנה בזמן הריצה. הכיוונים הסמנטיים במרחב הלטנט חושבו על הגנרטור המקורי ולכן נשארים תקפים, וה-Δ רק משפרת פרטים מקומיים.",
-    "explanation": "התוספת זמנית ואינה שוברת את ההתפלגות שהגדירה את הכיוונים המקוריים."
-  },
-  {
-    "type": "open",
-    "question": "הסבר כיצד Masked Convolution מבטיחה אוטורגרסיביות ב-PixelCNN.",
-    "correctAnswerText": "חוסמים את החלקים במסנן שקולטים פיקסלים מימין או מתחת למיקום הנוכחי. כך כל פיקסל רואה רק 'עבר' לפי סדר הסריקה (למשל שמאל ולמעלה), ולכן לא נחשף למידע עתידי בזמן האימון והדגימה.",
-    "explanation": "המסכה היא תנאי הכרחי לשמירה על מודל p(x_i | x_<i)."
-  },
-  {
-    "type": "open",
-    "question": "מדוע Transformer על קודים דיסקרטיים מתאים יותר מפיקסלים גולמיים בלמידה אוטורגרסיבית?",
-    "correctAnswerText": "קודים דיסקרטיים מסכמים אזור פיקסלים גדול ומכילים מידע סמנטי יציב, בעוד שפיקסלים בודדים רועשים ושינוי קטן נחשב זהה תפיסתית. כך Transformer לומד קשרים משמעותיים במקום פרטים חסרי משמעות.",
-    "explanation": "רצף קצר, עשיר במשמעות, חוסך חישוב ומשפר קוהרנטיות גלובלית."
-  },
-  {
-    "type": "open",
-    "question": "באילו מצבים PTI עדיף על HyperStyle, וההפך?",
-    "correctAnswerText": "PTI מתאים כשצריך התאמת שחזור מדויקת במיוחד לתמונה בודדת ומוכנים להריץ אופטימיזציה; HyperStyle עדיף כשיש צורך בזמן ריצה מהיר על אוסף תמונות מגוון, במחיר דיוק מעט נמוך יותר.",
-    "explanation": "PTI = איטי אך מותאם; HyperStyle = מהיר וגמיש אך מסתמך על רשת כללית."
+    "explanation": "בהנחה שרוצים למשל ספרה \"3\", h מספק למודל מידע קטגורי כדי שידגם רק דוגמאות תואמות :contentReference[oaicite:33]{index=33}:contentReference[oaicite:34]{index=34}"
   },
   {
     "type": "mc",
-    "question": "ב-Stable Diffusion משתמשים ב-cross-attention כדי…",
+    "question": "מה המאפיין העיקרי של Masked Conv ב-PixelCNN לעומת Conv רגיל?",
     "options": [
-      "לסנן רעש לבן מהרשת בזמן השחזור",
-      "להחדיר את אמבדינג הטקסט אל תוך תכונות-התמונה בכל שכבת U-Net",
-      "לגלות כיווני עריכה סמנטיים במרחב הלטנט",
-      "למזער את מספר ה-tokens שה-Transformer רואה"
+      "ליבה בקונבולוציה רדיאלית",
+      "איפוס משקלים במסנן שלא שייכים לעבר הפיקסל",
+      "הוספת Bias כפול לכל ערוץ",
+      "שימוש בקוד Book Lookup"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "מודול cross-attention משלב Query של פיצ'רי-התמונה עם Key/Value מן הטקסט וכך מקודד תנאי מילולי מדויק."
+    "explanation": "המסיכה מבטיחה שכל קונבולוציה נשענת רק על פיקסלים שכבר יוצרו ולא על עתידיים, כך נשמרת סיבתיות :contentReference[oaicite:35]{index=35}:contentReference[oaicite:36]{index=36}"
   },
   {
     "type": "mc",
-    "question": "Classifier-Free Guidance (CFG) בדיפיוז'ן מגדיל…",
+    "question": "Transformer על רצף הקודים ב-VQ-GAN עדיף על PixelCNN כי…",
     "options": [
-      "את המהירות של שלב denoising פי־שתיים",
-      "את שליטת המשתמש בתנאי הטקסט על-ידי שקלול פלט מותנה וללא-תנאי",
-      "את גודל ה-codebook של VQ-GAN לצורך חדות",
-      "את קצב הלמידה בכל אפוק"
+      "הוא ליניארי בגודל הקלט",
+      "הוא לוכד קשרים ארוכי טווח ומשפר קוהרנטיות",
+      "הוא אינו דורש שום Mask",
+      "הוא מפחית גודל Codebook בחצי"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "CFG מקזז לוג-סבירות בלתי-מותנית מסבירות מותנית כדי לחזק השפעת הטקסט."
+    "explanation": "Self-Attention מקשרת קוד בקצה אחד של התמונה עם אחר בצד השני וכך יוצרת מבנה גלובלי משכנע :contentReference[oaicite:37]{index=37}:contentReference[oaicite:38]{index=38}"
   },
   {
     "type": "mc",
-    "question": "איזו שיטת דגימה לדיפיוז'ן נחשבת מהירה אך פחות מדויקת לפי ההרצאה?",
+    "question": "ב-StyleGAN-NADA החיווי בין שתי תמונות נמדד ב-CLIP כ…",
     "options": [
-      "DDIM 50 צעדים",
-      "Euler a (ancestral)",
-      "PNDM (Pseudo-Num. DP-ODE)",
-      "Sampling ב-ODE Solver ממוטב"
+      "הפרש וקטורים במרחב הסגנון S",
+      "כיוון סמנטי בין אמבדינגי התמונות במרחב CLIP",
+      "רמת קשיחות מודולציה ל-w",
+      "מרחק L2 ישיר בפיקסלים"
+    ],
+    "correctAnswerIndex": 1,
+    "explanation": "משווים embedding_תמונה_מקור ל-embedding_תמונה_יעד ומיישרים אותו לכיוון בין הטקסטים :contentReference[oaicite:39]{index=39}:contentReference[oaicite:40]{index=40}"
+  },
+  {
+    "type": "mc",
+    "question": "מה היתרון של \"Invert-Then-NADA\" (שילוב אינברסיה ו-NADA)?",
+    "options": [
+      "מאפשר עריכה בדומיין מותאם על תוכן קיים",
+      "חוסך את אימון CLIP",
+      "מבטל צורך ב-W+",
+      "מקטין את גודל Codebook"
     ],
     "correctAnswerIndex": 0,
-    "explanation": "DDIM מקצר מאוד את מספר השלבים אך יוצר פרטים פחות חדים מריצות ארוכות."
+    "explanation": "הופכים תמונה אמיתית ל-W+, ואז מפעילים גנרטור מותאם-דומיין כדי לערב תוכן מוכר עם סגנון חדש :contentReference[oaicite:41]{index=41}:contentReference[oaicite:42]{index=42}"
   },
   {
     "type": "mc",
-    "question": "Memory-Efficient Attention (MEA) שהוזכר בהרצאה חוסך זיכרון על-ידי…",
+    "question": "מדוע דגימה ב-PixelCNN איטית?",
     "options": [
-      "החלפת softmax בליניארי",
-      "חישוב בלוק-wise של המטריצה Q·K במקום בבת-אחת",
-      "קידוד positional בסגנון סינוסואידלי",
-      "שימוש בשכבת Conv1×1 במקום Attention"
+      "ה-Codebook קטן מדי",
+      "נדרש חישוב סדרתי פיקסל-אחר-פיקסל",
+      "Self-Attention מרובע בזמן",
+      "Demodulation בכל שכבה"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "עיבוד בבלוקים קטנים מאפשר לשמור רק חלק מהמפתח-המכפלה ולצמצם השימוש VRAM."
+    "explanation": "כל פיקסל מחושב לאחר הקודמים ולכן אין הקבלה; זה גורם לזמן דגימה ארוך במיוחד :contentReference[oaicite:43]{index=43}:contentReference[oaicite:44]{index=44}"
   },
   {
     "type": "mc",
-    "question": "Latent-Diffusion פועל במרחב…",
+    "question": "GAN-Loss ב-VQ-GAN מחייב את ה-Decoder…",
     "options": [
-      "פיקסלים מלא",
-      "קודים דיסקרטיים של VQ-GAN",
-      "סמנטיקה של CLIP בלבד",
-      "קוונטיזציה ברזולוציית 32×32"
+      "לסכם פיקסלים ל-1",
+      "להפיק תמונות חדות ו“אמיתיות” בעיני Discriminator",
+      "לשמור על L2 נמוך בלבד",
+      "להפוך Self-Attention לריבועי"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "LD דוגם רעש ומנקה אותו במרחב הקומפקטי של VQ-GAN, מה שמאפשר חיסכון גדול בחישוב."
-  },
-  {
-    "type": "open",
-    "question": "הסבר בקצרה את תהליך denoising בדיפיוז'ן: מ-ε_t עד x_0.",
-    "correctAnswerText": "ה-U-Net מנבא את הרעש ε_t עבור צעד t. לאחר מכן משתמשים במשוואת הרקונסטרוקציה x_{t-1}=ᾱ_t^{-0.5}(x_t-β_t ε_t)+σ_t ε′ כדי לחזור צעד אחורה. חזרה איטרטיבית (או DDIM מקוצר) מביאה ממערבולת רעש לתמונה נקייה x_0.",
-    "explanation": "המודל לומד אינטגרטור הפוך לתהליך הדיפיוזיה ומחסיר רעש בהדרגה."
-  },
-  {
-    "type": "open",
-    "question": "מדוע Latent-Diffusion מסוגל לייצר תמונות 1024×1024 על כרטיס VRAM בינוני?",
-    "correctAnswerText": "הדגימה נעשית על מפות f×h/8×w/8 במקום על הפיקסלים; כך self-attention וחישובי UNet מתבצעים על טנסורים קטנים פי 64, ואז Decoder של VQ-GAN מגדיל חזרה לרזולוציה מלאה.",
-    "explanation": "צמצום המרחב בחישוב הדיפיוזי חוסך דרישת חישוב-זיכרון באופן דרסטי."
-  },
-  {
-    "type": "open",
-    "question": "מה היתרון של Timestep Embedding (sin/cos) ביחס ל-learnable vector ב-UNet של דיפיוז'ן?",
-    "correctAnswerText": "אמבדינג סינוסי מספק רצף אינסופי, אקסטרפולציה חלקה, ושומר על מידע יחסי בין צעדים, בעוד אמבדינג ל-512 צעדים קבועים מגביל את הדגם ולעתים דורש טבלאות גדולות.",
-    "explanation": "מחזוריות ויכולת אינטרפולציה תורמות ל-generalization בצעדי דגימה שונים."
-  },
-  {
-    "type": "open",
-    "question": "איך CFG (Classifier-Free Guidance) משנה את משוואת הדגימה?",
-    "correctAnswerText": "במקום ε=ε_θ(x_t,c), מחשבים ε̂=ε_θ(x_t)+w(ε_θ(x_t,c)-ε_θ(x_t)); הפרש בין מותנה ללא-מותנה מוגדל במשקל w וכך מושך את התמונה לכיוון התנאי.",
-    "explanation": "השקלול מחזק את השפעת c מבלי להזדקק למודל-מסווג חיצוני."
-  },
-  {
-    "type": "open",
-    "question": "מה הסיכון בהגדלת משקל CFG (w) מעבר לערך 8-10, וכיצד רואים זאת בתמונה?",
-    "correctAnswerText": "w גבוה מדי דוחף את המודל לשטח לא-נלמד ויוצר over-saturation או ארטיפקטים מפוספסים; רואים תבניות חדות לא טבעיות והיעלמות פרטים עדינים.",
-    "explanation": "הדגם יוצא מעקומת הנתונים שפגש באימון ולכן מפגין חוסר יציבות."
-  },
-  {
-    "type": "open",
-    "question": "הסבר בקצרה כיצד p sampling (PNDM) מאיץ דיפיוז'ן לעומת DDPM.",
-    "correctAnswerText": "PNDM פותר את משוואת ODE המקבילה לתהליך הדיפיוזי במדרגות גדולות ומשתמש בנגזרות קודמות (multi-step) כמו נוסחת Adams-Bashforth; כך נדרשים ~25 צעדים במקום 100-1000.",
-    "explanation": "פתרון ODE חוסך צעדים ע\"י חישוב שיפוע משוער יותר מדויק לכל צעד גדול."
-  },
-  {
-    "type": "open",
-    "question": "למה Sparse Attention (Win-size 64) יעיל לדגימת תמונות גדולות אך פחות לטקסט בקוד קצר?",
-    "correctAnswerText": "בתמונה יש תלות חזקה מקומית; חלון 64×64 תופס הקשר מספיק. בטקסט, תלות ארוכת טווח בין מילים מרוחקות חשובה, ולכן חיתוך החלון יאבד סמנטיקה.",
-    "explanation": "טבע הדאטה קובע אם ניתן להגביל ראייה מקומית מבלי לפגוע באיכות."
+    "explanation": "בזכות Discriminator נוסף, הדקודר לומד להחזיר פרטים חדים שנראים אמיתיים למפלה :contentReference[oaicite:45]{index=45}:contentReference[oaicite:46]{index=46}"
   },
   {
     "type": "mc",
-    "question": "DreamBooth מנצל זוגות (תמונה, טקסט ממותג) כדי…",
+    "question": "איזה מנגנון שומר על קשרים ארוכי-טווח במודל Transformer אך דורש משאבים רבים?",
     "options": [
-      "לייצב את דגימת הדיפיוז'ן בעזרת PNDM",
-      "לדייק את המודל בדמות/אובייקט חדש ללא פגיעה בכיווני טקסט כלליים",
-      "להאיץ denoising בשיטת CFG",
-      "להמיר קודי VQ-GAN לרזולוציה גבוהה יותר"
+      "Skip-Connections",
+      "Self-Attention",
+      "Masked Conv",
+      "Batch-Norm"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "המנגנון מוסיף token ייחודי ומכוונן את המודל כך שהטוקן מזוהה עם התמונות שסיפקת."
+    "explanation": "Self-Attention מצריך חישוב מטריצה n×n ולכן יקר אולם מוסיף הבנה גלובלית :contentReference[oaicite:47]{index=47}:contentReference[oaicite:48]{index=48}"
   },
   {
     "type": "mc",
-    "question": "טקסטואל אינברז'ן (Textual Inversion) שונה מדרים־בּוּת בכך ש-…",
+    "question": "ב-HyperStyle, לאחר השחזור ניתן עדיין להשתמש בכיווני עריכה שנלמדו מראש כי…",
     "options": [
-      "מעדכן רק טוקן embedding חדש ומשאיר את כל משקולות הדיפיוז'ן קבועות",
-      "דורש לפחות 100 תמונות לאובייקט",
-      "פועל רק במודלים אוטורגרסיביים",
-      "מתבסס על Encoder של CLIP לשינוי וקטור w"
-    ],
-    "correctAnswerIndex": 0,
-    "explanation": "Textual Inversion לומד embedding חדש בשכבת הטקסט בלבד ללא fine-tune על ה-UNet."
-  },
-  {
-    "type": "mc",
-    "question": "LoRA (Low-Rank Adaptation) מקטין את מספר הפרמטרים בעדכון דיפיוז'ן על-ידי…",
-    "options": [
-      "כפילת כל פילטר במטריצה רֵאנדום",
-      "הוספת פירוק מדרגה נמוכה (A·B) למשקולות הקיימות בזמן האימון",
-      "החלפת כל קונבולוציה ב-Depthwise",
-      "שמירת Layers FP16 בלבד"
+      "ה-Δ משנה רק את ה-Mapping Network",
+      "התיקונים קטנים ומשמרים את הגאומטריה של מרחב העריכה",
+      "הוא מבטל רעש סטוכסטי בין שכבות",
+      "הוא מחליף CLIP בתוויות מפוקחות"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "רק המטריצות הצרות A,B נלמדות; המשקל המקורי נשאר קפוא וחוסך זיכרון."
+    "explanation": "דלתא קטנה מיישרת את הפלט אך לא מעוותת את הכיוונים הסמנטיים המקוריים של הגנרטור :contentReference[oaicite:49]{index=49}:contentReference[oaicite:50]{index=50}"
   },
   {
     "type": "mc",
-    "question": "ControlNet מוסיף רשת ענף (branch) צמודה ל-UNet כדי…",
+    "question": "מהו תפקיד ה-Codebook ב-VQ-VAE?",
     "options": [
-      "לשפר דיוק CFG",
-      "להזרים תנאי מבני כמו קווי-מתאר, מפות עומק או פוזה",
-      "להחליף את CLIP ב-AutoEncoder",
-      "לבצע Safety Checking בזמן אמת"
+      "לאכוף רגולריזציה L2 על Encoder",
+      "לאפשר קוונטיזציה של פיצ'רים לווקטורים סופיים ולצמצם ממד",
+      "להגדיל חדות בעזרת GAN-Loss",
+      "לייצר קשר בין פיקסלים סמוכים"
     ],
     "correctAnswerIndex": 1,
-    "explanation": "הרשת המשוכפלת מקבלת פיצ'רים לֹא-רעשים מהתנאי ומדריכה את דיפיוז'ן מבלי להרוס המשקולות המקוריות."
+    "explanation": "כל וקטור פיצ'ר מוצמד לכניסה הקרובה ביותר בקודבוק, כך שהיצוג נעשה דיסקרטי ודחוס :contentReference[oaicite:51]{index=51}:contentReference[oaicite:52]{index=52}"
   },
   {
     "type": "mc",
-    "question": "Scheduler מסוג K-LMS (LMSD) נחשב…",
+    "question": "למה Transformer ברצף קודים איננו ליניארי בגודל התמונה?",
     "options": [
-      "ODE-based עם ארבעה שלבים ומערב גרדיאנט קודם",
-      "שיטת Euler-Maruyama עם רעש גאוסי חופשי",
-      "פתרון ליניארי לאחוזת β קבועה בלבד",
-      "האיטי ביותר מבין הסמפלרים הנפוצים"
+      "בגלל קוונטיזציה",
+      "מפני שמטריצת QK^T היא מסדר n×n",
+      "ה-Codebook קטן מדי",
+      "Demodulation מוסיף מורכבות"
     ],
-    "correctAnswerIndex": 0,
-    "explanation": "LMS משתמש במדרגה מרובעת (multistep) בדומה ל-PNDM אך עם רעש החזרה שונה."
+    "correctAnswerIndex": 1,
+    "explanation": "Self-Attention מחשב את הדמיון בין כל זוג קודים ולכן העלות חישובית ריבועית במספר הקוד n :contentReference[oaicite:53]{index=53}:contentReference[oaicite:54]{index=54}"
+  },
+
+  /* 30 אמריקאיות הסתיימו, כעת 20 פתוחות */
+
+  {
+    "type": "open",
+    "question": "תאר בקצרה את התהליך המרכזי של StyleGAN-NADA.",
+    "correctAnswerText": "מעתיקים את הגנרטור, מקפיאים את המקור, ומאמנים את העותק כך שכיוון השינוי בין תמונת-מקור לתמונת-יעד (ב-CLIP) יהיה מקביל לכיוון שנגזר מזוג טקסטים. כך לומדים לעבור לדומיין חדש בלי דאטה מתאים.",
+    "explanation": "השוואת כיוונים ב-CLIP מדריכה את המשקולות להתאים דומיין חדש תוך שמירה על מבנה לטנטי :contentReference[oaicite:55]{index=55}:contentReference[oaicite:56]{index=56}"
   },
   {
     "type": "open",
-    "question": "מדוע Textual Inversion דורש לבחור *טוקן נדיר* (לדוגמה \"sks\") במקום תיק של מילת קיים?",
-    "correctAnswerText": "טוקן נדיר אינו מקושר למשמעות קיימת, ולכן האמבדינג החדש יכול לקודד רק את האובייקט שלך בלי להתנגש עם דפוסים שנלמדו עבור מילים קיימות.",
-    "explanation": "הימנעות מקונפליקט במשמעות מאפשרת שליטה מלאה בבקשות הטקסט."
+    "question": "למה אופטימיזציה של w בלבד נכשלת כשמנסים לרנדר חתול בגנרטור כלבים?",
+    "correctAnswerText": "ה-w שולט רק בתוכן שקיים בדומיין הלמידה. אם הגנרטור מעולם לא ראה חתולים, כלל מרחב W מיפוי לכלבים ולכן אין כיוון שמוביל לחתול.",
+    "explanation": "המודל חסר פונקציית ייסוד לדומיין החתולים ולכן w תקוע בתת-מרחב של כלבים :contentReference[oaicite:57]{index=57}:contentReference[oaicite:58]{index=58}"
   },
   {
     "type": "open",
-    "question": "כיצד LoRA מאפשר לשתף מודלים מותאמים אישית בלי להפר את זכויות ההפצה של Stable Diffusion המקורי?",
-    "correctAnswerText": "מפיצים רק את משקלות A,B הזעירים (Δ) ולא את משקולות ה-UNet המלאות; המשתמש טוען את SD המקורי ומחיל את ה-LoRA מעל, כך שאין הפצה חוזרת של הקניין הרוחני המלא.",
-    "explanation": "Δ לבדו ≪ 1 MB לכן אינו כולל תוכן המודל הרשמי."
+    "question": "הסבר את המסחר בין דיוק למהירות בין Latent Optimization ל-Encoder Inversion.",
+    "correctAnswerText": "Latent Optimization מחפש קוד מותאם בדיוק גבוה אך דורש הרבה איטרציות; Encoder מבצע Pass יחיד ומהיר אך השחזור פחות צמוד משום שהמודל כללי.",
+    "explanation": "ה-Encoder מחליף חיפוש איטרטיבי במיפוי ישיר ומקריב חלק מהדיוק :contentReference[oaicite:59]{index=59}"
   },
   {
     "type": "open",
-    "question": "מה הסכנה ב-CFG גבוה מאוד כאשר משלבים אותו עם סאמפלר DDIM קצר (30 צעדים)?",
-    "correctAnswerText": "השילוב יוצר עודף גרדיאנט לכיוון הטקסט בכל צעד גדול, ולכן התמונה יכולה לקרוס לרוויית צבעים, double-edge או פסים גאומטריים.",
-    "explanation": "צעד גדול + חיזוק חזק → יציאה מעקומת האימון."
+    "question": "איך PTI מחדד שחזור מבלי להרוס כיווני עריכה קיימים?",
+    "correctAnswerText": "PTI מתחיל באינברסיה רגילה ואז עושה Fine-Tuning קטן במשקולות הגנרטור סביב אותה תמונה, ולכן נשמרת גאומטריית העריכה אך הפרטים משתפרים.",
+    "explanation": "השינויים מזעריים כך שהמרחב הסמנטי לא מעוות :contentReference[oaicite:61]{index=61}:contentReference[oaicite:62]{index=62}"
   },
   {
     "type": "open",
-    "question": "למה ControlNet מקפיא את משקולות ה-UNet המקורי ומאמן רק את הענף הנוסף?",
-    "correctAnswerText": "כך שומרים על יכולת המודל לייצר כל דומיין שקודם ידע, ומונעים 'שיכחה קטסטרופלית' בזמן הכוונת המבנה; הענף המלמד רק מוסיף מידע, לא מוחק.",
-    "explanation": "שילוב לטרלי מאפשר תנאי חזק בלי לפגוע בגנרליות."
+    "question": "מהו Masked Convolution ב-PixelCNN ולמה הוא קריטי?",
+    "correctAnswerText": "זהו פילטר קונבולוציה שבו ערכים שמעבירים מידע מפיקסלים עתידיים מאופסים, וכך הפיקסל הנוכחי תלוי רק בעברו ומקיים אוטורגרסיביות.",
+    "explanation": "המסיכה מונעת \"דליפת עתיד\" ומבטיחה שהמודל יכבד את סדר הסריקה :contentReference[oaicite:63]{index=63}:contentReference[oaicite:64]{index=64}"
   },
   {
     "type": "open",
-    "question": "הסבר בקצרה מהו \"Noise Offset\" (σ_offset) בסאמפלר Euler-a ומדוע ניתן להקטינו לתמונות של פרצופים.",
-    "correctAnswerText": "σ_offset מוסיף רעש מ-N(0,σ²) בשלב early למניעת mode collapse להתכנסות לאפס. פנים מכילות מבנה חזק ומוגדר, לכן מספיק offset קטן כדי לשמור חדות מבלי לפגוע בזיהוי.",
-    "explanation": "רעש מופרז יפגע בתווי פנים; רף נמוך מייצר תוצאה נקייה."
+    "question": "כיצד VQ-VAE מייצג תמונה כקוד דיסקרטי?",
+    "correctAnswerText": "Encoder מפיק מפה של וקטורים רציפים; כל וקטור מוחלף בכניסה הקרובה ביותר ב-Codebook קבוע, ו-Decoder משחזר מהקוד הבדיד.",
+    "explanation": "התהליך קוואנטיזציה → ייצוג קומפקטי :contentReference[oaicite:65]{index=65}:contentReference[oaicite:66]{index=66}"
   },
   {
     "type": "open",
-    "question": "מה היתרון של Fine-Tuning דיפיוז'ן במרחב V-Prediction (v-prediction) לעומת ε-Prediction?",
-    "correctAnswerText": "חיזוי v (שילוב ליניארי של ε ו-x_0) מקל על הסמפלרים ODE לסגור מעגל בין צעדים קדימה ואחורה, ומקטין סטריפינג צבעוני; המודל לומד מטרה סימטרית יותר ב-β.",
-    "explanation": "מטה-אנרגיה חלקה → גרדיאנט יציב דגימה יעילה."
+    "question": "פרט את שלבי Self-Attention (Q,K,V) כפי שתוארו בהרצאה.",
+    "correctAnswerText": "מחשב Q,K,V לכל פיקסל, יוצר מפה QK^T לקבלת משקלי קשב, משקלל אותם עם V, מבצע softmax לקבלת ייצוג חדש שמשלב מידע מכל התמונה.",
+    "explanation": "ה-Attention Map מייצר ממוצע משוקלל ששומר יחסים גלובליים :contentReference[oaicite:67]{index=67}:contentReference[oaicite:68]{index=68}"
+  },
+  {
+    "type": "open",
+    "question": "למה Transformer משפר קוהרנטיות לעומת PixelCNN ברצף קודים?",
+    "correctAnswerText": "Self-Attention מאפשר לכל קוד \"לראות\" קודים רחוקים לכן לומדים קשרים מבניים רחבים, ולא רק תלות לוקאלית כמו ב-Masked Conv.",
+    "explanation": "קשרים ארוכי-טווח חשובים לסימטריה ופרטים גלובליים :contentReference[oaicite:69]{index=69}:contentReference[oaicite:70]{index=70}"
+  },
+  {
+    "type": "open",
+    "question": "תאר בקצרה את מבנה ההיררכיה Top/Bottom ב-VQ-VAE-2.",
+    "correctAnswerText": "שכבת Top מקודדת תכנון גס של הסצנה; Bottom מוסיפה טקסטורות וחדות. הדגימה מתחילה ב-Top ואז משלימה ב-Bottom.",
+    "explanation": "הפרדה זו מאזנת איכות מול דחיסה :contentReference[oaicite:71]{index=71}:contentReference[oaicite:72]{index=72}"
+  },
+  {
+    "type": "open",
+    "question": "כתוב את נוסחת הפקטוריזציה האוטורגרסיבית והסבר משתנה אחד בה.",
+    "correctAnswerText": "p(x)=Π p(x_i | x_{<i}); כאן p(x_i | x_{<i}) היא ההסתברות של החלק הבא ברצף בהתבסס על כל מה שנדגם קודם.",
+    "explanation": "המודל לומד תנאי לכל חלק במקום את ההתפלגות המשותפת בבת אחת :contentReference[oaicite:73]{index=73}:contentReference[oaicite:74]{index=74}"
+  },
+  {
+    "type": "open",
+    "question": "ציין יישום אחד של אינברסיה והסברו.",
+    "correctAnswerText": "Invert & Edit: הופכים צילום לקוד W+ ואז מזיזים אותו בכיוון סמנטי (למשל 'הוסף חיוך') ליצירת גרסה ערוכה באיכות גבוהה.",
+    "explanation": "הקוד מאפשר שימוש בכל כיווני העריכה שנלמדו ב-StyleGAN :contentReference[oaicite:75]{index=75}"
+  },
+  {
+    "type": "open",
+    "question": "כיצד Loss אדברסריאלי ב-VQ-GAN מחדד תמונה?",
+    "correctAnswerText": "Discriminator דורש מה-Decoder לייצר פרטים דקים כדי להטעותו; לכן השחזור הופך חד ומציאותי יותר לעומת Loss שחזור בלבד.",
+    "explanation": "GAN-Loss מוסיף לחץ לפלט לראות אמיתי בעיני מפלה :contentReference[oaicite:77]{index=77}:contentReference[oaicite:78]{index=78}"
+  },
+  {
+    "type": "open",
+    "question": "מה תפקיד Regularization Loss ב-pSp Encoder?",
+    "correctAnswerText": "למשוך את הקודים ש-Encoder מפיק לכיוון הממוצע ב-W ובכך למנוע חריגה לאזורים שבהם הגנרטור מפיק תוצאות לא יציבות.",
+    "explanation": "שמירה על קודים 'בטוחים' משפרת יציבות שחזור :contentReference[oaicite:79]{index=79}:contentReference[oaicite:80]{index=80}"
+  },
+  {
+    "type": "open",
+    "question": "אילו מגבלות מציג PixelCNN כשעוברים לרזולוציות גבוהות?",
+    "correctAnswerText": "הדגימה סיבתית פיקסל-אחר-פיקסל נעשית איטית וקשרי לוקאליות גורמים לתמונות מטושטשות וחסרות קוהרנטיות גלובלית.",
+    "explanation": "העדר קשר ארוך טווח והחישוב הסדרתי מגבילים :contentReference[oaicite:81]{index=81}:contentReference[oaicite:82]{index=82}"
+  },
+  {
+    "type": "open",
+    "question": "הסבר כיצד דלתא-רשת ב-HyperStyle פועלת.",
+    "correctAnswerText": "ה-Δ מקבלת תמונה וכותבת שינוי קטן למשקולות הגנרטור; השינוי מחובר למשקולות המקוריות ומדייק אזורים שבהם השחזור נכשל.",
+    "explanation": "כך מתקבלת התאמה מהירה ומקומית בלי לנתק את המודל מהמרחב שלו :contentReference[oaicite:83]{index=83}:contentReference[oaicite:84]{index=84}"
+  },
+  {
+    "type": "open",
+    "question": "כיצד CLIP מדריך את האימון ב-StyleGAN-NADA?",
+    "correctAnswerText": "חישוב כיוון בין תמונות (G_frozen, G_train) וכיוון בין טקסטים, והמטרה לגרום לכיוונים להחפף במרחב CLIP – זה מפעיל גרדיאנט על משקולות הגנרטור המאומן.",
+    "explanation": "CLIP מספק מרחב משותף תמונה-טקסט לחיווי סמנטי :contentReference[oaicite:85]{index=85}:contentReference[oaicite:86]{index=86}"
+  },
+  {
+    "type": "open",
+    "question": "מדוע W+ עוזר לשמר פרטים עדינים בעת אינברסיה?",
+    "correctAnswerText": "מכיוון שכל שכבה מקבלת וקטור עצמאי, ניתן לכוונן שכבות גבוהות לפרטים (נמשים, טקסטורה) ושכבות נמוכות למבנה – כך משחזרים גם מיקרו-וריאציות.",
+    "explanation": "דרגת חופש גבוהה מונעת פשרות על איכות :contentReference[oaicite:87]{index=87}"
+  },
+  {
+    "type": "open",
+    "question": "מהו תהליך הקוונטיזציה ב-VQ-VAE ולמה הוא חשוב?",
+    "correctAnswerText": "בכל מיקום בוחרים את הווקטור הקרוב ב-Codebook במקום לשמור ערך רציף; כך מקבלים ייצוג דחוס שמקל על מודל גנרטיבי ללמוד התפלגות על קבוצה סופית.",
+    "explanation": "הדיסקרטיזציה מאפשרת שימוש ב-AR או Transformer על רצף קצר ובר-השוואה :contentReference[oaicite:89]{index=89}:contentReference[oaicite:90]{index=90}"
+  },
+  {
+    "type": "open",
+    "question": "תאר בקצרה מודל Autoregressive מותנה וכיצד הוא שולט על סוג הדגימות.",
+    "correctAnswerText": "מכניסים קוד h שמייצג קטגוריה; במהלך האימון החלקים ברצף לומדים גם מהפיקסלים הקודמים וגם מה-h כך שבדגימה ניתן לבחור h ולקבל רק דוגמאות מאותה קטגוריה.",
+    "explanation": "הוספת תנאי מיישרת את הדגימה להתחום הרצוי :contentReference[oaicite:91]{index=91}:contentReference[oaicite:92]{index=92}"
   }
 ]
