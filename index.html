@@ -92,6 +92,12 @@ function shuffleArray(array) {
 }
 
 function startQuiz() {
+  shuffledQuestions = [...ALL_QUESTIONS];
+  shuffleArray(shuffledQuestions);
+  if (shuffledQuestions.length > 80) {
+    shuffledQuestions = shuffledQuestions.slice(0, 80);
+  }
+
   currentQuestionIndex = 0;
   score = 0;
   resultsAreaEl.classList.add('hidden');
@@ -101,6 +107,7 @@ function startQuiz() {
   displayQuestion();
   updateProgressDisplay();
 }
+
 
 function updateProgressDisplay() {
   progressTextEl.textContent = `שאלה ${currentQuestionIndex + 1} מתוך ${shuffledQuestions.length}`;
@@ -123,15 +130,20 @@ function displayQuestion() {
   openAnswerInputEl.disabled = false;
 
   if (currentQuestion.type === 'mc') {
-    optionsContainerEl.classList.remove('hidden');
-    openEndedContainerEl.classList.add('hidden');
-    submitOpenAnswerButtonEl.classList.add('hidden');
-    openEndedSelfGradeButtonsEl.classList.add('hidden');
-    currentQuestion.options.forEach((option, index) => {
+    const originalOptions = currentQuestion.options.map((text, index) => ({
+      text,
+      index
+    }));
+    shuffleArray(originalOptions);
+    
+    optionsContainerEl.innerHTML = '';
+    currentQuestion.shuffledOptions = originalOptions;
+    
+    originalOptions.forEach((optionObj, displayIndex) => {
       const button = document.createElement('button');
-      button.textContent = option;
+      button.textContent = optionObj.text;
       button.classList.add('option-button', 'w-full', 'text-right', 'p-3', 'border', 'border-slate-300', 'rounded-lg', 'hover:bg-slate-100', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-400', 'transition', 'duration-150', 'ease-in-out');
-      button.onclick = () => selectAnswer(index);
+      button.onclick = () => selectAnswer(optionObj.index, button);
       optionsContainerEl.appendChild(button);
     });
   } else {
@@ -144,7 +156,7 @@ function displayQuestion() {
   updateProgressDisplay();
 }
 
-function selectAnswer(selectedIndex) {
+function selectAnswer(selectedIndex, selectedButton) {
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
   const isCorrect = selectedIndex === currentQuestion.correctAnswerIndex;
   const optionButtons = optionsContainerEl.querySelectorAll('.option-button');
@@ -152,12 +164,16 @@ function selectAnswer(selectedIndex) {
 
   if (isCorrect) {
     score++;
-    optionButtons[selectedIndex].classList.add('correct');
+    selectedButton.classList.add('correct');
     feedbackMessageEl.textContent = 'נכון!';
     feedbackMessageEl.className = 'text-md font-semibold text-green-600';
   } else {
-    optionButtons[selectedIndex].classList.add('incorrect');
-    optionButtons[currentQuestion.correctAnswerIndex].classList.add('correct');
+    selectedButton.classList.add('incorrect');
+    optionButtons.forEach(button => {
+      if (button.textContent === currentQuestion.options[currentQuestion.correctAnswerIndex]) {
+        button.classList.add('correct');
+      }
+    });
     feedbackMessageEl.textContent = 'לא נכון.';
     feedbackMessageEl.className = 'text-md font-semibold text-red-600';
   }
