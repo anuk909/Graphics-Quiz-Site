@@ -84,12 +84,12 @@ let score = 0;
 /* ---------- LOAD JSON ---------- */
 async function loadQuestions() {
   try {
-    const res   = await fetch('questions1.json');
+    const res   = await fetch('questions4.json');
     const data  = await res.json();
     ALL_QUESTIONS = data;
     startQuiz();
   } catch (err) {
-    alert('שגיאה בטעינת questions1.json');
+    alert('שגיאה בטעינת questions4.json');
     console.error(err);
   }
 }
