@@ -307,7 +307,8 @@
   },
   {
     "type": "open",
-    "question": "מדוע Alpha גבוה ובטא נמוך מעניקים תוצאה עם פחות סגנון ויותר תוכן ב-Style Transfer? (Ltotal(p,a,x)= αLcontent(p,x)+ βLstyle(a,x))",
+    "question": "מדוע Alpha גבוה ובטא נמוך מעניקים תוצאה עם פחות סגנון ויותר תוכן ב-Style Transfer? 
+    (L_total(p,a,x)= αL_content(p,x)+ βL_style(a,x))",
     "correctAnswerText": "Alpha שולט במשקל Loss התוכן; ערך גבוה גורם לאופטימיזציה להעדיף שימור מבנה. בטא נמוך מפחית חשיבות הסגנון ולכן הסגנון מוטמע בעדינות בלבד.",
     "explanation": "היחס Alpha:Beta מכתיב איזו שגיאה \"יקרה\" יותר באופטימיזציה על הפיקסלים."
   },
