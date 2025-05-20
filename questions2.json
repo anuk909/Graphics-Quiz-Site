@@ -343,7 +343,7 @@
   },
   {
     "type": "mc",
-    "question": "באיזו משתי הרשתות הבאות נדרש זוג תמונות תואם (paired data) לאימון?",
+    "question": "באיזו מהרשתות הבאות נדרש זוג תמונות תואם (paired data) לאימון?",
     "options": [
       "Pix2Pix",
       "CycleGAN",
