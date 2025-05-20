@@ -127,23 +127,31 @@ function showLectureSelection() {
   resultsAreaEl.classList.add('hidden');
 }
 
+/* ---------- LOAD MULTIPLE JSON FILES (skip 404) ---------- */
 async function loadQuestionsForLectures(lectureNums) {
-  try {
-    const fileNames = lectureNums.map(n => `questions${n}.json`);
-    const fetches   = fileNames.map(f => fetch(f).then(r => r.json()));
-    const arrays    = await Promise.all(fetches);
-    ALL_QUESTIONS   = arrays.flat();
+  const fileNames = lectureNums.map(n => `questions${n}.json`);
+  const arrays    = [];
 
-    if (ALL_QUESTIONS.length === 0) {
-      alert('לא נמצאו שאלות עבור הבחירה שבוצעה.');
-      showLectureSelection();
-    } else {
-      startQuiz();
+  for (const f of fileNames) {
+    try {
+      const res = await fetch(f);
+      if (!res.ok) {                // 404, 403 וכו'
+        console.warn(`⚠️  ${f} החזיר ${res.status}`);
+        continue;                   // מדלגים
+      }
+      arrays.push(await res.json());
+    } catch (err) {
+      console.warn(`⚠️  בעיה בקריאת ${f}`, err);
     }
-  } catch (err) {
-    alert('שגיאה בטעינת קבצי השאלות');
-    console.error(err);
+  }
+
+  ALL_QUESTIONS = arrays.flat();
+
+  if (ALL_QUESTIONS.length === 0) {
+    alert('לא נמצאו שאלות בקבצים שבחרת. ודא שהקבצים קיימים ונסה שוב.');
     showLectureSelection();
+  } else {
+    startQuiz();
   }
 }
 
