@@ -277,9 +277,9 @@
   },
   {
     "type": "open",
-    "question": "מהם שלושת השלבים העיקריים בתהליך CNN כפי שתואר בהרצאה?",
-    "correctAnswerText": "קלט תמונה → חילוץ תכונות (Convolution + Activation + Pooling) → סיווג סופי (Fully Connected + Softmax).",
-    "explanation": "שכבות הקונבולוציה בונות תכונות, pooling מצמצם ממד, Fully Connected ממפה למרחב המחלקות."
+    "question": "מהם השלבים העיקריים בתהליך CNN כפי שתואר בהרצאה?",
+    "correctAnswerText": "השלבים הם: קלט תמונה, חילוץ תכונות בעזרת שכבות קונבולוציה והפעלה ו-Pooling, ולבסוף סיווג באמצעות שכבות Fully Connected ו-Softmax.",
+    "explanation": "שכבות הקונבולוציה בונות תכונות, Pooling מצמצם את הממד, והשכבות הסופיות מבצעות את הסיווג."
   },
   {
     "type": "open",
