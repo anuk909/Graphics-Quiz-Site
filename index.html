@@ -27,14 +27,21 @@
     <!-- ========== LECTURE SELECTION ========== -->
     <div id="lecture-select-area" class="mb-6">
       <h2 class="text-lg font-semibold text-slate-800 mb-3">בחר/י הרצאות לבוחן:</h2>
+
       <div id="lecture-checkboxes" class="flex flex-wrap gap-4 mb-4 text-slate-700">
-        <!-- ניתן להתאים בקלות -->
         <label class="flex items-center gap-1"><input type="checkbox" value="1" class="lecture-checkbox" /> הרצאה 1</label>
         <label class="flex items-center gap-1"><input type="checkbox" value="2" class="lecture-checkbox" /> הרצאה 2</label>
         <label class="flex items-center gap-1"><input type="checkbox" value="3" class="lecture-checkbox" /> הרצאה 3</label>
         <label class="flex items-center gap-1"><input type="checkbox" value="4" class="lecture-checkbox" /> הרצאה 4</label>
         <label class="flex items-center gap-1"><input type="checkbox" value="5" class="lecture-checkbox" /> הרצאה 5</label>
       </div>
+
+      <!-- NEW: show-all checkbox -->
+      <label class="flex items-center gap-2 text-slate-700 mt-2 mb-4">
+        <input id="show-all-checkbox" type="checkbox" class="w-4 h-4" />
+        הצג את כל השאלות (לא רק 40 רנדומליות)
+      </label>
+
       <button id="start-quiz-button"
               class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-8 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-150 ease-in-out">
         התחל בוחן
@@ -100,6 +107,7 @@ let ALL_QUESTIONS = [];
 let shuffledQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
+let showAllQuestions = false;       // NEW
 
 /* ---------- UTILS ---------- */
 function shuffleArray(arr){
@@ -161,6 +169,10 @@ function handleStartQuizClick() {
     alert('אנא בחר/י לפחות הרצאה אחת');
     return;
   }
+
+  // NEW: האם לבחור את כל השאלות
+  showAllQuestions = document.getElementById('show-all-checkbox').checked;
+
   lectureSelectAreaEl.classList.add('hidden');
   loadQuestionsForLectures(selected);
 }
@@ -169,9 +181,12 @@ function handleStartQuizClick() {
 function startQuiz(){
   shuffledQuestions = [...ALL_QUESTIONS];
   shuffleArray(shuffledQuestions);
-  if (shuffledQuestions.length > MAX_QUESTIONS_PER_QUIZ){
+
+  // NEW: אם לא ביקשנו “הכול”, גוזמים ל-40
+  if (!showAllQuestions && shuffledQuestions.length > MAX_QUESTIONS_PER_QUIZ){
     shuffledQuestions = shuffledQuestions.slice(0, MAX_QUESTIONS_PER_QUIZ);
   }
+
   currentQuestionIndex = 0;
   score = 0;
 
