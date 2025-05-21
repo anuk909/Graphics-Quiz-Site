@@ -36,11 +36,17 @@
         <label class="flex items-center gap-1"><input type="checkbox" value="5" class="lecture-checkbox" /> הרצאה 5</label>
       </div>
 
-      <!-- NEW: show-all checkbox -->
-      <label class="flex items-center gap-2 text-slate-700 mt-2 mb-4">
-        <input id="show-all-checkbox" type="checkbox" class="w-4 h-4" />
-        הצג את כל השאלות (לא רק 40 רנדומליות)
-      </label>
+      <!-- NEW OPTIONS -->
+      <div class="flex flex-col gap-2 text-slate-700 mb-4">
+        <label class="flex items-center gap-2">
+          <input id="show-all-checkbox" type="checkbox" class="w-4 h-4" />
+          הצג את כל השאלות (לא רק 40 רנדומליות)
+        </label>
+        <label class="flex items-center gap-2">
+          <input id="only-open-checkbox" type="checkbox" class="w-4 h-4" />
+          הצג רק שאלות פתוחות
+        </label>
+      </div>
 
       <button id="start-quiz-button"
               class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-8 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-150 ease-in-out">
@@ -100,14 +106,15 @@
 <!-- =====================  SCRIPT  ===================== -->
 <script>
 /* ---------- CONSTANTS ---------- */
-const MAX_QUESTIONS_PER_QUIZ = 40;   // כמות שאלות בבוחן
+const MAX_QUESTIONS_PER_QUIZ = 40;
 
 /* ---------- GLOBALS ---------- */
 let ALL_QUESTIONS = [];
 let shuffledQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
-let showAllQuestions = false;       // NEW
+let showAllQuestions   = false;
+let onlyOpenQuestions  = false;
 
 /* ---------- UTILS ---------- */
 function shuffleArray(arr){
@@ -126,8 +133,6 @@ function getSelectedLectureNumbers() {
 
 function showLectureSelection() {
   lectureSelectAreaEl.classList.remove('hidden');
-
-  // מסתיר אזורי בוחן/תוצאה
   progressScoreContainerEl.classList.add('hidden');
   questionAreaEl.classList.add('hidden');
   feedbackAreaEl.classList.add('hidden');
@@ -135,7 +140,7 @@ function showLectureSelection() {
   resultsAreaEl.classList.add('hidden');
 }
 
-/* ---------- LOAD MULTIPLE JSON FILES (skip 404) ---------- */
+/* ---------- LOAD MULTIPLE JSON FILES ---------- */
 async function loadQuestionsForLectures(lectureNums) {
   const fileNames = lectureNums.map(n => `questions${n}.json`);
   const arrays    = [];
@@ -143,9 +148,9 @@ async function loadQuestionsForLectures(lectureNums) {
   for (const f of fileNames) {
     try {
       const res = await fetch(f);
-      if (!res.ok) {                // 404, 403 וכו'
+      if (!res.ok) {
         console.warn(`⚠️  ${f} החזיר ${res.status}`);
-        continue;                   // מדלגים
+        continue;
       }
       arrays.push(await res.json());
     } catch (err) {
@@ -170,8 +175,8 @@ function handleStartQuizClick() {
     return;
   }
 
-  // NEW: האם לבחור את כל השאלות
-  showAllQuestions = document.getElementById('show-all-checkbox').checked;
+  showAllQuestions  = document.getElementById('show-all-checkbox').checked;
+  onlyOpenQuestions = document.getElementById('only-open-checkbox').checked;
 
   lectureSelectAreaEl.classList.add('hidden');
   loadQuestionsForLectures(selected);
@@ -180,9 +185,22 @@ function handleStartQuizClick() {
 /* ---------- QUIZ FLOW ---------- */
 function startQuiz(){
   shuffledQuestions = [...ALL_QUESTIONS];
+
+  // סינון רק לשאלות פתוחות אם ביקשו
+  if (onlyOpenQuestions) {
+    shuffledQuestions = shuffledQuestions.filter(q => q.type !== 'mc');
+  }
+
+  // אין שאלות?
+  if (shuffledQuestions.length === 0) {
+    alert('לא נמצאו שאלות מתאימות להגדרות שבחרת. נסה לבחור הרצאות אחרות או לבטל את הסינון.');
+    showLectureSelection();
+    return;
+  }
+
   shuffleArray(shuffledQuestions);
 
-  // NEW: אם לא ביקשנו “הכול”, גוזמים ל-40
+  // חיתוך ל-40 אם לא ביקשו “הכול”
   if (!showAllQuestions && shuffledQuestions.length > MAX_QUESTIONS_PER_QUIZ){
     shuffledQuestions = shuffledQuestions.slice(0, MAX_QUESTIONS_PER_QUIZ);
   }
@@ -223,7 +241,6 @@ function displayQuestion(){
   openAnswerInputEl.disabled   = false;
 
   if (q.type === 'mc'){
-    /* multiple-choice */
     optionsContainerEl.classList.remove('hidden');
     openEndedContainerEl.classList.add('hidden');
     submitOpenAnswerButtonEl.classList.add('hidden');
@@ -245,7 +262,6 @@ function displayQuestion(){
     });
 
   }else{
-    /* open-ended */
     optionsContainerEl.classList.add('hidden');
     openEndedContainerEl.classList.remove('hidden');
     submitOpenAnswerButtonEl.classList.remove('hidden');
