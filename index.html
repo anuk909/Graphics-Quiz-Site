@@ -57,26 +57,7 @@
           id="lecture-checkboxes"
           class="flex flex-wrap gap-4 mb-4 text-slate-700"
         >
-          <label class="flex items-center gap-1"
-            ><input type="checkbox" value="1" class="lecture-checkbox" /> הרצאה
-            1</label
-          >
-          <label class="flex items-center gap-1"
-            ><input type="checkbox" value="2" class="lecture-checkbox" /> הרצאה
-            2</label
-          >
-          <label class="flex items-center gap-1"
-            ><input type="checkbox" value="3" class="lecture-checkbox" /> הרצאה
-            3</label
-          >
-          <label class="flex items-center gap-1"
-            ><input type="checkbox" value="4" class="lecture-checkbox" /> הרצאה
-            4</label
-          >
-          <label class="flex items-center gap-1"
-            ><input type="checkbox" value="5" class="lecture-checkbox" /> הרצאה
-            5</label
-          >
+          <!-- Lecture checkboxes will be dynamically generated -->
         </div>
 
         <!-- NEW OPTIONS -->
@@ -219,6 +200,51 @@
           const j = Math.floor(Math.random() * (i + 1));
           [arr[i], arr[j]] = [arr[j], arr[i]];
         }
+      }
+
+      /* ---------- DYNAMIC LECTURE DETECTION ---------- */
+      async function detectAvailableLectures() {
+        const availableLectures = [];
+
+        // Try to fetch quiz files starting from 1
+        for (let i = 1; i <= 20; i++) {
+          // Check up to 20 lectures
+          try {
+            const response = await fetch(`questions${i}.json`, {
+              method: "HEAD",
+            });
+            if (response.ok) {
+              availableLectures.push(i);
+            }
+          } catch (error) {
+            // File doesn't exist or network error, continue checking
+            continue;
+          }
+        }
+
+        return availableLectures;
+      }
+
+      function generateLectureCheckboxes(lectureNumbers) {
+        const lectureCheckboxesEl =
+          document.getElementById("lecture-checkboxes");
+        lectureCheckboxesEl.innerHTML = ""; // Clear existing content
+
+        lectureNumbers.forEach((num) => {
+          const label = document.createElement("label");
+          label.className = "flex items-center gap-1";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.value = num;
+          checkbox.className = "lecture-checkbox";
+
+          const text = document.createTextNode(` הרצאה ${num}`);
+
+          label.appendChild(checkbox);
+          label.appendChild(text);
+          lectureCheckboxesEl.appendChild(label);
+        });
       }
 
       /* ---------- LECTURE SELECTION ---------- */
@@ -545,7 +571,25 @@
       restartQuizButtonEl.addEventListener("click", restartQuiz);
 
       /* ---------- INIT ---------- */
-      document.addEventListener("DOMContentLoaded", showLectureSelection);
+      document.addEventListener("DOMContentLoaded", async function () {
+        showLectureSelection();
+
+        // Detect and generate lecture checkboxes
+        try {
+          const availableLectures = await detectAvailableLectures();
+          if (availableLectures.length > 0) {
+            generateLectureCheckboxes(availableLectures);
+          } else {
+            // Fallback: show error message
+            document.getElementById("lecture-checkboxes").innerHTML =
+              '<p class="text-red-600">לא נמצאו קבצי שאלות. ודא שהקבצים questions1.json, questions2.json וכו\' קיימים בתיקייה.</p>';
+          }
+        } catch (error) {
+          console.error("Error detecting lectures:", error);
+          // Fallback: generate checkboxes for lectures 1-5
+          generateLectureCheckboxes([1, 2, 3, 4, 5]);
+        }
+      });
     </script>
   </body>
 </html>
