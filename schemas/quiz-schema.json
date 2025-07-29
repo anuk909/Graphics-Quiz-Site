@@ -1,0 +1,105 @@
+{
+  "title": "Neural Networks Graphics Quiz Schema",
+  "description": "JSON schema for quiz questions about neural networks and computer graphics",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "oneOf": [
+      {
+        "title": "Multiple Choice Question",
+        "description": "A question with multiple choice options",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "mc",
+            "description": "Indicates this is a multiple choice question"
+          },
+          "question": {
+            "type": "string",
+            "description": "The question text",
+            "minLength": 1
+          },
+          "options": {
+            "type": "array",
+            "description": "Array of possible answer choices",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "correctAnswerIndex": {
+            "type": "integer",
+            "description": "Zero-based index of the correct answer in the options array",
+            "minimum": 0
+          },
+          "explanation": {
+            "type": "string",
+            "description": "Explanation of why the correct answer is correct",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "type",
+          "question",
+          "options",
+          "correctAnswerIndex",
+          "explanation"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "title": "Open-Ended Question",
+        "description": "A question requiring a free-form text answer",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "open",
+            "description": "Indicates this is an open-ended question"
+          },
+          "question": {
+            "type": "string",
+            "description": "The question text",
+            "minLength": 1
+          },
+          "correctAnswerText": {
+            "type": "string",
+            "description": "The expected correct answer or a model answer",
+            "minLength": 1
+          },
+          "explanation": {
+            "type": "string",
+            "description": "Additional explanation or context for the answer",
+            "minLength": 1
+          }
+        },
+        "required": ["type", "question", "correctAnswerText", "explanation"],
+        "additionalProperties": false
+      }
+    ]
+  },
+  "minItems": 1,
+  "examples": [
+    [
+      {
+        "type": "mc",
+        "question": "מהי המטרה העיקרית של שכבת הקונבולוציה ב-CNN?",
+        "options": [
+          "לצמצם ממדים על-ידי בחירת ערך בודד מכל חלון קטן",
+          "לחלץ תכונות מקומיות בעזרת גרעינים קבועי-גודל המחליקים על התמונה",
+          "למפות את הפלט להסתברויות סופיות עבור כל מחלקה אפשרית",
+          "לאפס ערכים שליליים כדי לשמור מידע חיובי בלבד"
+        ],
+        "correctAnswerIndex": 1,
+        "explanation": "גרעיני הקונבולוציה מבצעים מכפלה קונבולוציונית בחלונות מקומיים וכך יוצרים feature maps המציגות קצוות, טקסטורות וצורות."
+      },
+      {
+        "type": "open",
+        "question": "הסבר בקצרה כיצד Supervised Learning שונה מ-Unsupervised Learning.",
+        "correctAnswerText": "בלמידה מונחית המודל מתאמן על נתונים עם תוויות ידועות מראש ומלמד קשר ישיר קלט-פלט; בלמידה בלתי-מונחית אין תוויות והמודל מחפש מבנים סמויים בדאטה.",
+        "explanation": "ההבדל הוא קיומן של תוויות: בפיקוח יש יעד מפורש, בלא-פיקוח המודל רק מגלה קבוצות או התפלגויות בעצמו."
+      }
+    ]
+  ]
+}

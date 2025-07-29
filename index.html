@@ -210,7 +210,7 @@
         for (let i = 1; i <= 20; i++) {
           // Check up to 20 lectures
           try {
-            const response = await fetch(`questions${i}.json`, {
+            const response = await fetch(`questions/questions${i}.json`, {
               method: "HEAD",
             });
             if (response.ok) {
@@ -265,7 +265,9 @@
 
       /* ---------- LOAD MULTIPLE JSON FILES ---------- */
       async function loadQuestionsForLectures(lectureNums) {
-        const fileNames = lectureNums.map((n) => `questions${n}.json`);
+        const fileNames = lectureNums.map(
+          (n) => `questions/questions${n}.json`
+        );
         const arrays = [];
 
         for (const f of fileNames) {
@@ -582,7 +584,7 @@
           } else {
             // Fallback: show error message
             document.getElementById("lecture-checkboxes").innerHTML =
-              '<p class="text-red-600">לא נמצאו קבצי שאלות. ודא שהקבצים questions1.json, questions2.json וכו\' קיימים בתיקייה.</p>';
+              '<p class="text-red-600">לא נמצאו קבצי שאלות. ודא שהקבצים questions/questions1.json, questions/questions2.json וכו\' קיימים בתיקייה.</p>';
           }
         } catch (error) {
           console.error("Error detecting lectures:", error);
