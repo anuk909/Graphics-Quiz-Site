@@ -23,3 +23,5 @@ Create a quiz based on the lecture content provided in the PDF/DOCX file. Follow
 - Detailed explanations for all answers
 - Solvable questions, not trivial or impossible
 - Realistic distractors for multiple choice questions
+- Don't refreance directly any pages from the summary
+- Avoid using latex and other complex notations
