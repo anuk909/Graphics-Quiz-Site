@@ -32,6 +32,12 @@
         opacity: 0.7;
         cursor: not-allowed;
       }
+      .option-button.selected {
+        background-color: #3b82f6;
+        color: #fff;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px #93c5fd;
+      }
       textarea:focus,
       button:focus {
         outline: 2px solid #3b82f6;
@@ -203,12 +209,97 @@
       let showAllQuestions = false;
       let onlyOpenQuestions = false;
       let onlyMCQuestions = false;
+      let selectedOptionIndex = -1; // For keyboard navigation (-1 means no selection)
 
       /* ---------- UTILS ---------- */
       function shuffleArray(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+      }
+
+      /* ---------- KEYBOARD NAVIGATION ---------- */
+      function updateOptionSelection() {
+        const optionButtons =
+          optionsContainerEl.querySelectorAll(".option-button");
+        optionButtons.forEach((btn, idx) => {
+          if (idx === selectedOptionIndex && selectedOptionIndex >= 0) {
+            btn.classList.add("selected");
+          } else {
+            btn.classList.remove("selected");
+          }
+        });
+      }
+
+      function selectCurrentOption() {
+        const optionButtons =
+          optionsContainerEl.querySelectorAll(".option-button");
+        if (
+          optionButtons.length > 0 &&
+          selectedOptionIndex >= 0 &&
+          selectedOptionIndex < optionButtons.length
+        ) {
+          const selectedButton = optionButtons[selectedOptionIndex];
+          if (!selectedButton.disabled) {
+            const origIndex = +selectedButton.dataset.origIndex;
+            selectAnswer(origIndex, selectedButton);
+          }
+        }
+      }
+
+      function handleKeyboardNavigation(event) {
+        const q = shuffledQuestions[currentQuestionIndex];
+
+        // Check if "Next Question" button is visible and handle Enter for it
+        if (
+          event.key === "Enter" &&
+          !nextQuestionButtonEl.classList.contains("hidden")
+        ) {
+          event.preventDefault();
+          showNextQuestion();
+          return;
+        }
+
+        // Only handle keyboard navigation for multiple choice questions
+        if (!q || q.type !== "mc") {
+          return;
+        }
+
+        const optionButtons =
+          optionsContainerEl.querySelectorAll(".option-button");
+        if (optionButtons.length === 0) {
+          return;
+        }
+
+        switch (event.key) {
+          case "ArrowUp":
+            event.preventDefault();
+            if (selectedOptionIndex <= 0) {
+              selectedOptionIndex = optionButtons.length - 1;
+            } else {
+              selectedOptionIndex = selectedOptionIndex - 1;
+            }
+            updateOptionSelection();
+            break;
+
+          case "ArrowDown":
+            event.preventDefault();
+            if (
+              selectedOptionIndex < 0 ||
+              selectedOptionIndex >= optionButtons.length - 1
+            ) {
+              selectedOptionIndex = 0;
+            } else {
+              selectedOptionIndex = selectedOptionIndex + 1;
+            }
+            updateOptionSelection();
+            break;
+
+          case "Enter":
+            event.preventDefault();
+            selectCurrentOption();
+            break;
         }
       }
 
@@ -428,6 +519,9 @@
             btn.onclick = () => selectAnswer(+btn.dataset.origIndex, btn);
             optionsContainerEl.appendChild(btn);
           });
+
+          // Initialize keyboard navigation (no initial selection)
+          selectedOptionIndex = -1;
         } else {
           optionsContainerEl.classList.add("hidden");
           openEndedContainerEl.classList.remove("hidden");
@@ -446,7 +540,10 @@
 
         const allButtons =
           optionsContainerEl.querySelectorAll(".option-button");
-        allButtons.forEach((b) => (b.disabled = true));
+        allButtons.forEach((b) => {
+          b.disabled = true;
+          b.classList.remove("selected"); // Remove keyboard selection styling
+        });
 
         if (ok) {
           score++;
@@ -593,6 +690,9 @@
       );
       nextQuestionButtonEl.addEventListener("click", showNextQuestion);
       restartQuizButtonEl.addEventListener("click", restartQuiz);
+
+      // Add keyboard navigation
+      document.addEventListener("keydown", handleKeyboardNavigation);
 
       /* ---------- INIT ---------- */
       document.addEventListener("DOMContentLoaded", async function () {
